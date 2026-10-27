@@ -1,438 +1,2940 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Tài Chính Gia Đình - Mô Hình 6 Chiếc Lọ</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0fdf4; /* Soft green tint for family/growth vibe */
-            background-image: radial-gradient(at 40% 20%, hsla(210, 100%, 93%, 1) 0px, transparent 50%),
-                              radial-gradient(at 80% 0%, hsla(189, 100%, 90%, 1) 0px, transparent 50%),
-                              radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 1) 0px, transparent 50%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6258F5">
+  <title>Sổ Tài Chính Cá Nhân</title>
 
-        /* Custom Slider Styling */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            margin-top: -8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border: 2px solid var(--thumb-color, #10b981);
-            transition: transform 0.1s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: #e2e8f0;
-            border-radius: 4px;
-        }
-        
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="text-gray-800 pb-12">
+<body>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-        
-        <!-- Header -->
-        <header class="text-center mb-10">
-            <h1 class="text-4xl md:text-5xl font-bold text-teal-800 mb-3 drop-shadow-sm">
-                <i class="fa-solid fa-leaf mr-2 text-teal-500"></i> Quản Lý Tài Chính Gia Đình
-            </h1>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Phương pháp 6 chiếc lọ (J-A-R-S) giúp bạn và gia đình kiểm soát thu chi, xây dựng thói quen tài chính bền vững và hạnh phúc.
-            </p>
-        </header>
+  
+  <div class="mobile-appbar">
+    <button type="button" class="btn-menu-toggle" id="btn-menu-toggle" aria-label="Mở menu điều hướng" aria-controls="app-sidebar" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="brand-badge"><i class="fa-solid fa-wallet"></i></div>
+    <div class="mobile-brand-wrap">
+      <span class="brand-title">SỔ TÀI CHÍNH</span>
+      <span class="brand-unit-badge-mobile">Đơn vị: Triệu đồng</span>
+    </div>
+  </div>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
-        <!-- Income Input Section -->
-        <div class="glass-panel rounded-3xl shadow-xl p-6 md:p-10 mb-10 text-center border-t-4 border-t-teal-500">
-            <label for="incomeInput" class="block text-xl font-semibold text-gray-700 mb-4">
-                Tổng thu nhập hàng tháng của gia đình (VNĐ)
-            </label>
-            <div class="relative max-w-md mx-auto">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span class="text-gray-500 font-semibold">₫</span>
-                </div>
-                <input type="text" id="incomeInput" placeholder="VD: 20,000,000" 
-                    class="block w-full pl-10 pr-4 py-4 text-2xl font-bold text-teal-900 bg-white border-2 border-teal-200 rounded-2xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 transition-all shadow-inner outline-none">
-            </div>
-            <p class="mt-3 text-sm text-gray-500">Nhập số tiền để hệ thống tự động phân bổ vào các lọ.</p>
-        </div>
+  <aside class="sidebar" id="app-sidebar">
+    <div class="sidebar-header">
+      <div class="brand-badge" onclick="toggleSideRail()" title="Sổ Tài Chính Cá Nhân"><i class="fa-solid fa-wallet"></i></div>
+      <div class="brand-text">
+        <span class="brand-title">SỔ TÀI CHÍNH</span>
+        <span class="brand-subtitle">Quản lý &amp; Tăng trưởng</span>
+        <span class="brand-unit-badge"><i class="fa-solid fa-coins"></i> Đơn vị: Triệu đồng</span>
+      </div>
 
-        <!-- Main Content Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
-            
-            <!-- Left: Settings & Sliders -->
-            <div class="lg:col-span-7 glass-panel rounded-3xl shadow-lg p-6 md:p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">
-                        <i class="fa-solid fa-sliders text-teal-500 mr-2"></i> Tùy chỉnh Tỷ lệ
-                    </h2>
-                    <button id="resetBtn" class="text-sm font-medium text-teal-600 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition-colors">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> Khôi phục mặc định
-                    </button>
-                </div>
-
-                <!-- Validation Alert -->
-                <div id="validationAlert" class="hidden mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start">
-                    <i class="fa-solid fa-triangle-exclamation mt-1 mr-3 text-red-500"></i>
-                    <div>
-                        <p class="font-bold">Cảnh báo tỷ lệ phần trăm!</p>
-                        <p id="validationMsg" class="text-sm">Tổng phần trăm hiện tại là 105%. Vui lòng điều chỉnh lại cho đúng 100%.</p>
-                    </div>
-                </div>
-
-                <!-- Sliders Container -->
-                <div id="slidersContainer" class="space-y-5">
-                    <!-- Sliders will be injected here by JS -->
-                </div>
-                
-                <!-- Total Percentage Footer -->
-                <div class="mt-8 pt-4 border-t border-gray-200 flex justify-between items-center">
-                    <span class="text-lg font-semibold text-gray-700">Tổng cộng:</span>
-                    <span id="totalPercentageDisplay" class="text-2xl font-bold text-teal-600">100%</span>
-                </div>
-            </div>
-
-            <!-- Right: Chart -->
-            <div class="lg:col-span-5 glass-panel rounded-3xl shadow-lg p-6 md:p-8 flex flex-col justify-center items-center relative">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6 w-full text-left">
-                    <i class="fa-solid fa-chart-pie text-teal-500 mr-2"></i> Biểu đồ Phân bổ
-                </h2>
-                <div class="relative w-full max-w-[300px] aspect-square">
-                    <canvas id="jarChart"></canvas>
-                </div>
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-gray-500">Tỷ lệ được phân bổ theo nhu cầu của gia đình.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Cards Grid -->
-        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">
-            <i class="fa-solid fa-boxes-stacked text-teal-500 mr-2"></i> 6 Chiếc Lọ Của Bạn
-        </h2>
-        <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards will be injected here by JS -->
-        </div>
-
+      <button type="button" class="btn-rail-toggle" id="btn-rail-toggle" aria-label="Thu gọn hoặc mở rộng Side Rail" aria-pressed="true" title="Thu gọn thanh bên" onclick="toggleSideRailPin()">
+        <i class="fa-solid fa-chevron-left icon-rail-toggle-arrow"></i>
+      </button>
+      <button type="button" class="btn-drawer-close" id="btn-drawer-close" aria-label="Đóng menu điều hướng"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <script>
-        // Data structure for the 6 Jars
-        const defaultJars = [
-            { 
-                id: 'nec', 
-                name: 'Nhu Cầu Thiết Yếu', 
-                desc: 'Sinh hoạt phí, ăn uống, hóa đơn, tiền thuê nhà...',
-                percent: 55, 
-                color: '#3B82F6', // Blue
-                icon: 'fa-house-chimney' 
-            },
-            { 
-                id: 'ffa', 
-                name: 'Tự Do Tài Chính', 
-                desc: 'Đầu tư, kinh doanh, tạo thu nhập thụ động.',
-                percent: 10, 
-                color: '#10B981', // Emerald
-                icon: 'fa-seedling' 
-            },
-            { 
-                id: 'ltss', 
-                name: 'Tiết Kiệm Dài Hạn', 
-                desc: 'Mua nhà, mua xe, quỹ dự phòng khẩn cấp.',
-                percent: 10, 
-                color: '#8B5CF6', // Violet
-                icon: 'fa-piggy-bank' 
-            },
-            { 
-                id: 'edu', 
-                name: 'Giáo Dục / PT Bản Thân', 
-                desc: 'Sách, khóa học, nâng cao kỹ năng cho gia đình.',
-                percent: 10, 
-                color: '#F59E0B', // Amber
-                icon: 'fa-graduation-cap' 
-            },
-            { 
-                id: 'play', 
-                name: 'Hưởng Thụ', 
-                desc: 'Du lịch, giải trí, tự thưởng cho bản thân.',
-                percent: 10, 
-                color: '#EC4899', // Pink
-                icon: 'fa-plane-departure' 
-            },
-            { 
-                id: 'giv', 
-                name: 'Cho Đi / Từ Thiện', 
-                desc: 'Giúp đỡ người thân, làm từ thiện, quà tặng.',
-                percent: 5, 
-                color: '#EF4444', // Red
-                icon: 'fa-hand-holding-heart' 
-            }
-        ];
+    <nav class="nav-menu" id="rail-nav-menu">
+      <div class="rail-nav-wrapper" id="rail-nav-wrapper">
 
-        // State
-        let jars = JSON.parse(JSON.stringify(defaultJars));
-        let income = 0;
-        let chartInstance = null;
+        <div class="rail-active-pill" id="rail-active-pill" aria-hidden="true">
+          <span class="rail-active-indicator"></span>
+        </div>
 
-        // DOM Elements
-        const incomeInput = document.getElementById('incomeInput');
-        const slidersContainer = document.getElementById('slidersContainer');
-        const cardsContainer = document.getElementById('cardsContainer');
-        const totalPercentageDisplay = document.getElementById('totalPercentageDisplay');
-        const validationAlert = document.getElementById('validationAlert');
-        const validationMsg = document.getElementById('validationMsg');
-        const resetBtn = document.getElementById('resetBtn');
+        <div class="rail-nav-student" id="rail-nav-student">
+          <div class="nav-section-label">TỔNG QUAN &amp; THIẾT LẬP</div>
+          <button class="nav-item active" id="btn-tab-tukhoa" data-tooltip="Từ khóa thiết lập" onclick="switchTab('tab-tukhoa')">
+            <i class="fa-solid fa-sliders"></i><span>Từ khóa thiết lập</span>
+          </button>
+          <button class="nav-item" id="btn-tab-dashboard" data-tooltip="Dashboard phân tích" onclick="switchTab('tab-dashboard')">
+            <i class="fa-solid fa-chart-pie"></i><span>Dashboard phân tích</span>
+          </button>
 
-        // Utility Functions
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('vi-VN', { 
-                style: 'currency', 
-                currency: 'VND',
-                maximumFractionDigits: 0
-            }).format(amount);
-        };
+          <div class="nav-section-label">MỤC TIÊU &amp; LỘ TRÌNH</div>
+          <button class="nav-item" id="btn-tab-muctieu-bt" data-tooltip="Mục tiêu bản thân" onclick="switchTab('tab-muctieu-bt')">
+            <i class="fa-solid fa-bullseye"></i><span>Mục tiêu bản thân</span>
+          </button>
+          <button class="nav-item" id="btn-tab-muctieu-tc" data-tooltip="Mục tiêu tài chính" onclick="switchTab('tab-muctieu-tc')">
+            <i class="fa-solid fa-vault"></i><span>Mục tiêu tài chính</span>
+          </button>
+          <button class="nav-item two-lines" id="btn-tab-candoi" data-tooltip="Cân đối lộ trình" onclick="switchTab('tab-candoi')">
+            <i class="fa-solid fa-route"></i><span>Cân đối lộ trình</span>
+          </button>
+          <button class="nav-item two-lines" id="btn-tab-kehoach" data-tooltip="Kế hoạch thu chi" onclick="switchTab('tab-kehoach')">
+            <i class="fa-solid fa-wallet"></i><span>Kế hoạch thu chi</span>
+          </button>
 
-        const parseCurrency = (str) => {
-            const parsed = parseInt(str.replace(/\D/g, ''), 10);
-            return isNaN(parsed) ? 0 : parsed;
-        };
+          <div class="nav-section-label">THEO DÕI THU CHI 12 THÁNG</div>
 
-        const formatInputCurrency = (value) => {
-            if (!value) return '';
-            const number = parseInt(value.replace(/\D/g, ''), 10);
-            if (isNaN(number)) return '';
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        };
+          <button type="button" class="rail-month-collapsed-btn" id="btn-month-collapsed" data-tooltip="Theo dõi 12 tháng" onclick="switchMonthTab(AppState.currentMonth || 1)">
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+          <div class="month-nav-grid">
+            <button class="nav-item nav-month" id="btn-month-1" onclick="switchMonthTab(1)"><span>Tháng 01</span></button>
+            <button class="nav-item nav-month" id="btn-month-2" onclick="switchMonthTab(2)"><span>Tháng 02</span></button>
+            <button class="nav-item nav-month" id="btn-month-3" onclick="switchMonthTab(3)"><span>Tháng 03</span></button>
+            <button class="nav-item nav-month" id="btn-month-4" onclick="switchMonthTab(4)"><span>Tháng 04</span></button>
+            <button class="nav-item nav-month" id="btn-month-5" onclick="switchMonthTab(5)"><span>Tháng 05</span></button>
+            <button class="nav-item nav-month" id="btn-month-6" onclick="switchMonthTab(6)"><span>Tháng 06</span></button>
+            <button class="nav-item nav-month" id="btn-month-7" onclick="switchMonthTab(7)"><span>Tháng 07</span></button>
+            <button class="nav-item nav-month" id="btn-month-8" onclick="switchMonthTab(8)"><span>Tháng 08</span></button>
+            <button class="nav-item nav-month" id="btn-month-9" onclick="switchMonthTab(9)"><span>Tháng 09</span></button>
+            <button class="nav-item nav-month" id="btn-month-10" onclick="switchMonthTab(10)"><span>Tháng 10</span></button>
+            <button class="nav-item nav-month" id="btn-month-11" onclick="switchMonthTab(11)"><span>Tháng 11</span></button>
+            <button class="nav-item nav-month" id="btn-month-12" onclick="switchMonthTab(12)"><span>Tháng 12</span></button>
+          </div>
 
-        // Render UI Functions
-        const renderSliders = () => {
-            slidersContainer.innerHTML = '';
-            jars.forEach((jar, index) => {
-                const sliderRow = document.createElement('div');
-                sliderRow.className = 'flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 group';
-                
-                sliderRow.innerHTML = `
-                    <div class="w-full sm:w-1/3 flex items-center justify-between sm:justify-start">
-                        <div class="flex items-center text-gray-700 font-medium">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-3 text-white shadow-sm" style="background-color: ${jar.color}">
-                                <i class="fa-solid ${jar.icon} text-sm"></i>
-                            </div>
-                            <span class="truncate pr-2">${jar.name}</span>
-                        </div>
+          <div class="nav-section-label">ĐÁNH GIÁ TÂM LÝ</div>
+          <button class="nav-item" id="btn-tab-khaosat" data-tooltip="Bảng khảo sát hồ sơ" onclick="switchTab('tab-khaosat')">
+            <i class="fa-solid fa-clipboard-check"></i><span>Bảng khảo sát hồ sơ</span>
+          </button>
+          <div class="sidebar-student-admin-shortcut" id="sidebar-student-admin-shortcut" style="display: none;">
+            <button type="button" class="btn-sidebar-admin-pill" onclick="toggleAdminManagerMode(true)" title="Quay lại Giao diện Quản trị">
+              <i class="fa-solid fa-shield-halved"></i> <span>Vào Trang Quản trị</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="rail-nav-admin" id="rail-nav-admin" style="display: none;">
+          <div class="nav-section-label">TỔNG QUAN &amp; THIẾT LẬP</div>
+          <button class="nav-item active" id="btn-tab-admin-groups" data-tooltip="Lớp học đang quản lí" onclick="switchTab('tab-admin-groups')">
+            <i class="fa-solid fa-sliders"></i><span>Lớp học đang quản lí</span>
+          </button>
+          <button class="nav-item" id="btn-tab-admin-requests" data-tooltip="Yêu cầu vào nhóm" onclick="switchTab('tab-admin-requests')">
+            <i class="fa-solid fa-globe"></i><span>Yêu cầu vào nhóm</span>
+            <span class="badge-pending-count" id="admin-pending-badge" style="display: none;">0</span>
+          </button>
+
+          <div class="nav-section-label">QUẢN LÍ NHÓM</div>
+          <button class="nav-item" id="btn-tab-admin-students" data-tooltip="Dashboard tổng hợp nhóm" onclick="switchTab('tab-admin-students')">
+            <i class="fa-solid fa-chalkboard-user"></i><span>Dashboard tổng hợp nhóm</span>
+          </button>
+          <button class="nav-item" id="btn-tab-admin-analytics" data-tooltip="Phân tích chuyên sâu" onclick="switchTab('tab-admin-analytics')">
+            <i class="fa-solid fa-chart-pie"></i><span>Phân tích chuyên sâu</span>
+          </button>
+
+          <div class="nav-section-label">CHẾ ĐỘ SỔ TÀI CHÍNH</div>
+          <button type="button" class="nav-item btn-switch-to-student-rail" id="btn-switch-to-student" data-tooltip="Chuyển sang xem Sổ tài chính" onclick="toggleAdminManagerMode(false)">
+            <i class="fa-solid fa-book-open"></i><span>Xem Sổ tài chính</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-admin-footer" id="sidebar-admin-footer" style="display: none;">
+      <button type="button" class="btn-sidebar-admin-settings" id="btn-sidebar-admin-settings" onclick="openAdminPersonalSettingsModal()" title="Cài đặt cá nhân">
+        <i class="fa-solid fa-gear"></i> <span>Cài đặt cá nhân</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="app-topbar">
+      <div class="topbar-left">
+        <span class="status-indicator"></span>
+        <h1 id="current-title">TỪ KHÓA THIẾT LẬP</h1>
+      </div>
+
+      <div class="topbar-right">
+        <span id="cloud-status-badge" class="cloud-badge cloud-ready">
+          <i class="fa-solid fa-cloud"></i> <span id="cloud-status-text">Đám mây sẵn sàng</span>
+        </span>
+
+        <button type="button" class="btn-cloud-sync" id="btn-cloud-load" onclick="openUnifiedDataModal('import')" title="Nhập / Xuất dữ liệu &amp; Sao lưu">
+          <i class="fa-solid fa-cloud-arrow-down"></i> <span>Nhập dữ liệu</span>
+        </button>
+
+        <button type="button" class="btn-cloud-sync btn-cloud-save" id="btn-cloud-save" onclick="saveAppStateToCloud()" title="Lưu dữ liệu hiện tại">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span>Lưu</span>
+        </button>
+
+        <button type="button" class="u021-switch" id="u021-theme-switch" role="switch" aria-checked="false" aria-label="Chuyển đổi giao diện Sáng / Tối" title="Chuyển sang giao diện Tối" onclick="toggleTheme(event)">
+          <span class="u021-track">
+            <span class="u021-sky u021-sky-day">
+              <span class="u021-cloud u021-cloud-1"></span>
+              <span class="u021-cloud u021-cloud-2"></span>
+              <span class="u021-cloud u021-cloud-3"></span>
+            </span>
+            <span class="u021-sky u021-sky-night">
+              <span class="u021-star u021-star-1"></span>
+              <span class="u021-star u021-star-2"></span>
+              <span class="u021-star u021-star-3"></span>
+              <span class="u021-star u021-star-4"></span>
+              <span class="u021-star u021-star-5"></span>
+            </span>
+            <span class="u021-knob">
+              <span class="u021-crater u021-crater-1"></span>
+              <span class="u021-crater u021-crater-2"></span>
+              <span class="u021-crater u021-crater-3"></span>
+            </span>
+          </span>
+        </button>
+
+        <button type="button" class="btn-topbar-admin-mode" id="btn-admin-mode-toggle" style="display: none;" onclick="toggleAdminManagerMode()" title="Chuyển đổi giao diện Quản trị / Sổ tài chính">
+          <i class="fa-solid fa-chalkboard-user"></i> <span id="admin-mode-toggle-label">Xem toàn cảnh lớp học</span>
+        </button>
+
+        <div class="topbar-auth-section" id="topbar-auth-section">
+          <a href="./auth/index.html" class="btn-topbar-login-prominent" id="btn-topbar-login" title="Đăng nhập tài khoản" onclick="goToAuthPage('login'); return false;">
+            <i class="fa-solid fa-right-to-bracket"></i> <span>Đăng nhập</span>
+          </a>
+          <button type="button" class="topbar-user-chip" id="topbar-user-chip" style="display: none;" title="Hồ sơ tài khoản &amp; Chuyển đổi" onclick="toggleAccountMenu(event, true)">
+            <span class="topbar-user-avatar" id="topbar-user-avatar">U</span>
+            <span class="topbar-user-name" id="topbar-user-name">Người dùng</span>
+            <i class="fa-solid fa-chevron-down topbar-user-chevron"></i>
+          </button>
+
+          <div class="account-switcher-menu menu-from-topbar" id="account-switcher-menu" role="menu" aria-label="Danh sách tài khoản và hồ sơ" style="display: none;">
+            <div class="account-menu-header">
+              <span class="account-menu-title"><i class="fa-solid fa-user-circle text-primary"></i> Tài khoản của bạn</span>
+              <span class="account-menu-badge" id="account-profiles-count" style="display: none;"></span>
+            </div>
+
+            <div class="account-list" id="rail-account-list" role="group"></div>
+
+            <div class="account-menu-divider"></div>
+
+            <div class="account-actions">
+              <button type="button" class="account-action-btn" id="btn-menu-account-info" onclick="openUserModal(true, 'account'); closeAccountMenu();">
+                <i class="fa-solid fa-id-card-clip text-primary"></i> <span>Thông tin tài khoản</span>
+              </button>
+              <button type="button" class="account-action-btn" id="btn-menu-change-password" onclick="openUserModal(true, 'change-password'); closeAccountMenu();">
+                <i class="fa-solid fa-lock text-primary"></i> <span>Đổi mật khẩu</span>
+              </button>
+              <button type="button" class="account-action-btn" id="btn-menu-class-manager" onclick="openClassManagerModal(); closeAccountMenu();" style="display: none;">
+                <i class="fa-solid fa-chalkboard-user text-primary"></i> <span>Quản lý Lớp học &amp; Giảng viên</span>
+              </button>
+              <button type="button" class="account-action-btn" id="btn-menu-join-class" onclick="openStudentJoinClassModal(); closeAccountMenu();">
+                <i class="fa-solid fa-users text-primary"></i> <span>Tham gia Nhóm</span>
+              </button>
+              <button type="button" class="account-action-btn" onclick="openUnifiedDataModal('import'); closeAccountMenu();">
+                <i class="fa-solid fa-file-import text-primary"></i> <span>Nhập / Xuất dữ liệu &amp; Sao lưu</span>
+              </button>
+              <button type="button" class="account-action-btn" onclick="saveAppStateToCloud(); closeAccountMenu();">
+                <i class="fa-solid fa-cloud-arrow-up text-success"></i> <span>Lưu dữ liệu</span>
+              </button>
+              <button type="button" class="account-action-btn text-danger" id="btn-account-logout" onclick="logoutUserProfile(); closeAccountMenu();">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Đăng xuất tài khoản</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="student-preview-banner" class="student-preview-banner" role="status" aria-live="polite" style="display: none;">
+      <div class="student-preview-info">
+        <i class="fa-solid fa-eye text-primary"></i>
+        <span>ĐANG XEM BÀI HỌC VIÊN: <strong id="preview-student-name">Học viên</strong> (<code id="preview-student-user">@user</code>) — <em>CHẾ ĐỘ CHỈ ĐỌC (READ-ONLY)</em></span>
+      </div>
+      <button type="button" class="btn-exit-student-preview" onclick="exitStudentPlanReadOnly()">
+        <i class="fa-solid fa-arrow-left"></i> <span>Quay lại Quản lý Lớp học</span>
+      </button>
+    </div>
+
+    <section class="content-body">
+
+      <div id="tab-admin-groups" class="tab-pane">
+        <div class="admin-pane-container">
+          <div class="admin-hero-banner">
+            <div class="admin-hero-content">
+              <div class="admin-hero-badge"><i class="fa-solid fa-layer-group"></i> TRUNG TÂM QUẢN TRỊ NHÓM</div>
+              <h2 class="admin-hero-title">Tổng quan các nhóm được tạo</h2>
+              <p class="admin-hero-desc">Quản lý lớp học, phân quyền thành viên, thiết lập nhóm Kín/Mở và tùy chỉnh quy định đào tạo</p>
+            </div>
+            <div class="admin-hero-actions">
+              <button type="button" class="btn-create-group-hero" onclick="toggleCreateGroupForm()">
+                <i class="fa-solid fa-plus-circle"></i> <span>Tạo nhóm mới</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-kpi-grid">
+            <div class="admin-kpi-card">
+              <div class="kpi-icon-wrap bg-violet-soft text-primary"><i class="fa-solid fa-chalkboard-user"></i></div>
+              <div class="kpi-info">
+                <span class="kpi-num" id="kpi-total-groups">0</span>
+                <span class="kpi-label">Tổng số nhóm</span>
+              </div>
+            </div>
+            <div class="admin-kpi-card">
+              <div class="kpi-icon-wrap bg-emerald-soft text-emerald"><i class="fa-solid fa-users"></i></div>
+              <div class="kpi-info">
+                <span class="kpi-num" id="kpi-total-students">0</span>
+                <span class="kpi-label">Tổng học viên</span>
+              </div>
+            </div>
+            <div class="admin-kpi-card">
+              <div class="kpi-icon-wrap bg-amber-soft text-amber"><i class="fa-solid fa-lock"></i></div>
+              <div class="kpi-info">
+                <span class="kpi-num" id="kpi-private-groups">0</span>
+                <span class="kpi-label">Nhóm Kín (Private)</span>
+              </div>
+            </div>
+            <div class="admin-kpi-card clickable-card" onclick="switchTab('tab-admin-requests')">
+              <div class="kpi-icon-wrap bg-rose-soft text-rose"><i class="fa-solid fa-user-clock"></i></div>
+              <div class="kpi-info">
+                <span class="kpi-num" id="kpi-pending-requests">0</span>
+                <span class="kpi-label">Yêu cầu chờ duyệt</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="create-group-form-wrap" class="create-group-form-card" style="display: none;">
+            <div class="form-card-header">
+              <div class="form-card-title-group">
+                <h3><i class="fa-solid fa-plus-circle text-primary"></i> Khởi tạo nhóm đào tạo mới</h3>
+                <p>Thiết lập tên lớp, mã mời, quy mô thành viên và phân loại chế độ Kín/Mở</p>
+              </div>
+              <button type="button" class="btn-close-form" onclick="toggleCreateGroupForm()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="form-card-body">
+              <div class="form-grid-2cols">
+                <div class="form-field-group">
+                  <label for="inp-new-group-name">Tên nhóm / Lớp học <span class="text-rose">*</span></label>
+                  <input type="text" id="inp-new-group-name" class="admin-input-styled" placeholder="Ví dụ: Lớp K49 - Quản Trị Tài Chính Cá Nhân" maxlength="64">
+                </div>
+                <div class="form-field-group">
+                  <label for="inp-new-group-code">Mã tham gia nhóm <span class="text-rose">*</span></label>
+                  <div class="input-with-action">
+                    <input type="text" id="inp-new-group-code" class="admin-input-styled uppercase-input" placeholder="TC-K49" maxlength="32">
+                    <button type="button" class="btn-input-action" onclick="generateRandomGroupCode()" title="Tự động sinh mã ngẫu nhiên">
+                      <i class="fa-solid fa-shuffle"></i> <span>Sinh mã</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label>Số lượng thành viên tham gia tối đa <span class="text-rose">*</span></label>
+                <div class="limit-selector-group">
+                  <label class="limit-radio-label">
+                    <input type="radio" name="new-group-limit" value="40" checked>
+                    <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>40</strong> thành viên</span>
+                  </label>
+                  <label class="limit-radio-label">
+                    <input type="radio" name="new-group-limit" value="60">
+                    <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>60</strong> thành viên</span>
+                  </label>
+                  <label class="limit-radio-label">
+                    <input type="radio" name="new-group-limit" value="100">
+                    <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>100</strong> thành viên</span>
+                  </label>
+                  <label class="limit-radio-label">
+                    <input type="radio" name="new-group-limit" value="0">
+                    <span class="limit-radio-card"><i class="fa-solid fa-infinity"></i> <strong>Không giới hạn</strong> (No limit)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label>Chế độ tham gia &amp; Bảo mật nhóm <span class="text-rose">*</span></label>
+                <div class="privacy-selector-group">
+                  <label class="privacy-radio-label">
+                    <input type="radio" name="new-group-privacy" value="private" checked>
+                    <span class="privacy-radio-card">
+                      <div class="privacy-card-icon"><i class="fa-solid fa-lock"></i></div>
+                      <div class="privacy-card-text">
+                        <strong>Nhóm Kín (Private)</strong>
+                        <span>Học viên nhập mã gửi yêu cầu, Quản trị viên duyệt mới được vào</span>
+                      </div>
+                    </span>
+                  </label>
+                  <label class="privacy-radio-label">
+                    <input type="radio" name="new-group-privacy" value="global">
+                    <span class="privacy-radio-card">
+                      <div class="privacy-card-icon"><i class="fa-solid fa-globe"></i></div>
+                      <div class="privacy-card-text">
+                        <strong>Nhóm Mở (Global)</strong>
+                        <span>Học viên nhập mã là tham gia trực tiếp ngay lập tức</span>
+                      </div>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-field-group">
+                <label for="inp-new-group-desc">Mô tả &amp; Quy định nhóm (Tùy chọn)</label>
+                <textarea id="inp-new-group-desc" class="admin-textarea-styled" rows="2" placeholder="Ghi chú nội quy bài tập, hạn nộp kế hoạch tài chính hoặc lưu ý cho thành viên..."></textarea>
+              </div>
+
+              <div class="form-actions-row">
+                <button type="button" class="btn-cancel-form" onclick="toggleCreateGroupForm()">Hủy bỏ</button>
+                <button type="button" class="btn-submit-group" onclick="submitCreateNewGroup()">
+                  <i class="fa-solid fa-check-circle"></i> <span>Tạo nhóm ngay</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-toolbar-row">
+            <div class="search-box-wrap">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="admin-group-search" class="admin-search-input" placeholder="Tìm kiếm nhóm theo tên hoặc mã..." oninput="renderAdminGroupsList()">
+            </div>
+            <div class="filter-actions-wrap">
+              <select id="admin-group-filter-type" class="admin-select-styled" onchange="renderAdminGroupsList()">
+                <option value="all">Tất cả nhóm</option>
+                <option value="private">Chỉ nhóm Kín (Private)</option>
+                <option value="global">Chỉ nhóm Mở (Global)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="admin-groups-grid" class="admin-groups-grid"></div>
+        </div>
+      </div>
+
+      <div id="tab-admin-requests" class="tab-pane">
+        <div class="admin-pane-container">
+          <div class="requests-notice-banner">
+            <div class="notice-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="notice-text">
+              <h4>Quy trình duyệt yêu cầu thành viên</h4>
+              <p>Trang này <strong>chỉ áp dụng cho các Nhóm Kín (Private)</strong>. Sau khi học viên gửi yêu cầu nhập nhóm, Quản trị viên sẽ phê duyệt hoặc từ chối tại đây. Đối với các <strong>Nhóm Mở (Global)</strong>, học viên tham gia trực tiếp và không cần thao tác tại trang này.</p>
+            </div>
+          </div>
+
+          <div class="admin-toolbar-row">
+            <div class="class-filter-wrap">
+              <label for="admin-requests-group-filter"><i class="fa-solid fa-filter text-primary"></i> <span>Lọc theo nhóm:</span></label>
+              <select id="admin-requests-group-filter" class="admin-select-styled" onchange="renderAdminRequestsTable()">
+                <option value="all">Tất cả các nhóm Kín</option>
+              </select>
+            </div>
+            <div class="requests-counter-badge" id="requests-counter-badge">
+              <i class="fa-solid fa-clock"></i> <span>0 yêu cầu đang chờ</span>
+            </div>
+          </div>
+
+          <div class="admin-table-card">
+            <div class="table-responsive" id="wrap-table-admin-requests">
+              <table class="admin-custom-table" id="table-admin-requests">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th>Học viên xin vào</th>
+                    <th>Email liên hệ</th>
+                    <th>Nhóm yêu cầu</th>
+                    <th>Thời gian gửi</th>
+                    <th style="text-align: right; width: 220px;">Quyết định</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-admin-requests"></tbody>
+              </table>
+            </div>
+            <div id="empty-admin-requests" class="admin-empty-state" style="display: none;">
+              <div class="empty-icon text-emerald"><i class="fa-solid fa-circle-check"></i></div>
+              <h3>Không có yêu cầu nào đang chờ</h3>
+              <p>Tất cả các yêu cầu xin vào nhóm Kín đã được phê duyệt hoặc từ chối đầy đủ.</p>
+              <span class="empty-badge-tip"><i class="fa-solid fa-bell"></i> Hệ thống tự động báo chuông khi có học viên mới gửi yêu cầu</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-admin-students" class="tab-pane">
+        <div class="admin-pane-container">
+          <div class="students-mgmt-header-card">
+            <div class="mgmt-header-top">
+              <div class="group-picker-box">
+                <label for="admin-students-group-select"><i class="fa-solid fa-layer-group text-primary"></i> Đang xem nhóm:</label>
+                <select id="admin-students-group-select" class="admin-group-picker-dropdown" onchange="onAdminStudentGroupChange(this.value)"></select>
+              </div>
+              <div class="group-current-meta" id="group-current-meta"></div>
+              <div class="mgmt-header-actions">
+                <button type="button" class="btn-admin-action-outline" onclick="exportGroupMembersCsv()" title="Xuất báo cáo nhóm dạng CSV">
+                  <i class="fa-solid fa-file-excel"></i> <span>Xuất CSV</span>
+                </button>
+                <button type="button" class="btn-admin-action-outline" onclick="exportGroupJsonSnapshot()" title="Tải toàn bộ bài làm sinh viên của nhóm dạng JSON">
+                  <i class="fa-solid fa-file-code"></i> <span>Tải JSON bài làm</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="students-summary-strip" id="students-summary-strip">
+              <div class="strip-kpi-item active" id="kpi-filter-all" onclick="filterAdminStudentsKpi('all')" title="Xem tất cả">
+                <div class="strip-kpi-icon-badge kpi-badge-indigo"><i class="fa-solid fa-users"></i></div>
+                <div class="strip-kpi-content">
+                  <span class="strip-kpi-val" id="strip-kpi-members">0</span>
+                  <span class="strip-kpi-lbl">Thành viên trong nhóm</span>
+                </div>
+              </div>
+              <div class="strip-kpi-item" id="kpi-filter-completed" onclick="filterAdminStudentsKpi('completed')" title="Lọc sinh viên đã hoàn thành">
+                <div class="strip-kpi-icon-badge kpi-badge-emerald"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="strip-kpi-content">
+                  <span class="strip-kpi-val text-emerald" id="strip-kpi-completed">0</span>
+                  <span class="strip-kpi-lbl">Đã hoàn thành 100%</span>
+                </div>
+              </div>
+              <div class="strip-kpi-item" id="kpi-filter-balancing" onclick="filterAdminStudentsKpi('balancing')" title="Lọc sinh viên đang lập lộ trình">
+                <div class="strip-kpi-icon-badge kpi-badge-amber"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="strip-kpi-content">
+                  <span class="strip-kpi-val text-amber" id="strip-kpi-balancing">0</span>
+                  <span class="strip-kpi-lbl">Đang lập lộ trình</span>
+                </div>
+              </div>
+              <div class="strip-kpi-item" id="kpi-filter-pending" onclick="filterAdminStudentsKpi('pending')" title="Lọc sinh viên chưa hoàn thiện">
+                <div class="strip-kpi-icon-badge kpi-badge-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="strip-kpi-content">
+                  <span class="strip-kpi-val text-red" id="strip-kpi-pending">0</span>
+                  <span class="strip-kpi-lbl">Chưa hoàn thiện</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-toolbar-row">
+            <div class="search-box-wrap" style="flex: 1;">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="admin-student-search" class="admin-search-input" placeholder="Tìm sinh viên theo họ tên hoặc username..." oninput="renderAdminStudentsTable()">
+            </div>
+            <div class="admin-view-switcher">
+              <button type="button" class="view-switch-btn active" id="btn-view-mode-progress" onclick="setAdminStudentsViewMode('progress')" title="Chế độ xem tiến độ lộ trình">
+                <i class="fa-solid fa-bars-progress"></i> <span>Tiến độ</span>
+              </button>
+              <button type="button" class="view-switch-btn" id="btn-view-mode-matrix" onclick="setAdminStudentsViewMode('matrix')" title="Chế độ xem ma trận chỉ số tài chính toàn cảnh">
+                <i class="fa-solid fa-table-cells"></i> <span>Ma trận tài chính</span>
+              </button>
+            </div>
+            <div class="student-count-chip" id="student-count-chip">Hiển thị: 0 thành viên</div>
+          </div>
+
+          <div class="admin-table-card">
+            <div class="table-responsive" id="wrap-table-admin-students">
+              <table class="admin-custom-table" id="table-admin-students">
+                <thead id="thead-admin-students">
+                  <tr>
+                    <th style="width: 50px;">STT</th>
+                    <th>Sinh viên / Thành viên</th>
+                    <th>Email</th>
+                    <th>Ngày tham gia</th>
+                    <th>Trạng thái</th>
+                    <th style="min-width: 220px;">Tiến độ lộ trình tài chính</th>
+                    <th style="text-align: right; width: 170px;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-admin-students"></tbody>
+              </table>
+            </div>
+            <div id="empty-admin-students" class="admin-empty-state" style="display: none;">
+              <div class="empty-icon text-muted"><i class="fa-solid fa-user-group"></i></div>
+              <h3>Nhóm chưa có sinh viên nào</h3>
+              <p>Hãy chia sẻ Mã tham gia nhóm cho sinh viên để họ bắt đầu tham gia lớp học.</p>
+              <span class="empty-badge-tip"><i class="fa-solid fa-share-nodes"></i> Sao chép mã lớp ở phía trên để gửi cho học viên</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-admin-analytics" class="tab-pane">
+        <div class="admin-pane-container">
+          <div class="analytics-header-card">
+            <div class="analytics-title-group">
+              <div class="analytics-icon-badge"><i class="fa-solid fa-chart-pie"></i></div>
+              <div class="analytics-title-text">
+                <h3>Phân tích tài chính chuyên sâu nhóm</h3>
+                <p>Tổng hợp chỉ số phân bổ tài sản, khẩu vị rủi ro và tỷ lệ đạt mục tiêu trung bình của nhóm</p>
+              </div>
+            </div>
+            <div class="analytics-group-selector">
+              <select id="analytics-group-select" class="admin-group-picker-dropdown" onchange="renderAdminAnalyticsView(this.value)"></select>
+            </div>
+          </div>
+
+          <div class="analytics-grid-row">
+            <div class="analytics-card">
+              <div class="analytics-card-header">
+                <div class="card-header-icon icon-blue"><i class="fa-solid fa-chart-pie"></i></div>
+                <div>
+                  <h4>Cơ cấu phân bổ tài sản trung bình nhóm</h4>
+                  <span>Dựa trên mục tiêu tài chính của tất cả thành viên trong nhóm</span>
+                </div>
+              </div>
+              <div id="analytics-asset-bars" class="analytics-bars-container"></div>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-card-header">
+                <div class="card-header-icon icon-emerald"><i class="fa-solid fa-bullseye"></i></div>
+                <div>
+                  <h4>Tỷ lệ hoàn thành mục tiêu tài chính</h4>
+                  <span>Đánh giá mức độ khả thi và khả năng tích lũy mục tiêu trọng yếu</span>
+                </div>
+              </div>
+              <div id="analytics-goals-container" class="analytics-goals-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="tab-tukhoa" class="tab-pane active">
+        <div class="top-info-row">
+          <div class="info-block block-modern-accent">
+            <div class="info-header"><i class="fa-regular fa-calendar"></i> Năm bắt đầu theo dõi</div>
+            <div class="info-body num-blue" id="input-year" contenteditable="true" spellcheck="false">2026</div>
+          </div>
+
+          <div class="info-block block-modern-dark">
+            <div class="info-header"><i class="fa-regular fa-user"></i> Tuổi của bạn năm <span class="dynamic-year">2026</span></div>
+            <div class="info-body num-blue" id="input-age" contenteditable="true" spellcheck="false">21</div>
+          </div>
+
+          <div class="color-convention-block">
+            <div class="convention-title"><i class="fa-solid fa-circle-info"></i> Quy ước dữ liệu trên trang:</div>
+            <div class="convention-item"><span class="color-rect bg-blue"></span><span class="text-blue-rule">Chữ xanh tím: Nhập số liệu trực tiếp</span></div>
+            <div class="convention-item"><span class="color-rect bg-black"></span><span class="text-black-rule">Chữ xám / đen: Giá trị tính toán tự động</span></div>
+            <div class="convention-item"><span class="color-rect bg-red"></span><span class="text-red-rule">Chữ đỏ / cam: Cảnh báo & Khoản quan trọng</span></div>
+          </div>
+        </div>
+
+        <div class="sheet-tables-container">
+
+          <div class="sheet-table-wrap">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-main-danger">
+                  <th colspan="3">
+                    <div class="table-header-flex">
+                      <span class="title"><i class="fa-solid fa-arrow-down-wide-short"></i> Danh mục chi phí</span>
+                      <button class="btn-table-add" onclick="addExpenseRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
                     </div>
-                    <div class="w-full sm:w-1/2 flex items-center">
-                        <input type="range" min="0" max="100" step="1" value="${jar.percent}" 
-                            class="w-full" style="--thumb-color: ${jar.color}" 
-                            data-index="${index}">
+                  </th>
+                </tr>
+                <tr class="header-sub"><th style="width: 40px;">#</th><th>Khoản mục chi tiêu</th><th style="width: 45px;">Xóa</th></tr>
+              </thead>
+              <tbody id="tbody-expenses"></tbody>
+            </table>
+          </div>
+
+          
+          <div class="sheet-table-wrap">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-main-success">
+                  <th colspan="3">
+                    <div class="table-header-flex">
+                      <span class="title"><i class="fa-solid fa-arrow-up-right-dots"></i> Danh mục thu nhập</span>
+                      <button class="btn-table-add" onclick="addIncomeRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
                     </div>
-                    <div class="w-full sm:w-1/6 flex items-center justify-end sm:justify-center">
-                        <div class="relative w-20">
-                            <input type="number" min="0" max="100" value="${jar.percent}" 
-                                class="w-full border border-gray-300 rounded-lg px-2 py-1 text-center focus:ring-2 focus:border-transparent outline-none transition-all font-semibold"
-                                style="focus:ring-${jar.color}"
-                                data-index="${index}">
-                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">%</span>
-                        </div>
+                  </th>
+                </tr>
+                <tr class="header-sub"><th style="width: 40px;">#</th><th>Nguồn thu nhập</th><th style="width: 45px;">Xóa</th></tr>
+              </thead>
+              <tbody id="tbody-income"></tbody>
+            </table>
+          </div>
+
+          
+          <div class="sheet-table-wrap">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-main-warning">
+                  <th colspan="3">
+                    <div class="table-header-flex">
+                      <span class="title"><i class="fa-solid fa-graduation-cap"></i> Kế hoạch phát triển</span>
+                      <button class="btn-table-add" onclick="addPlanRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
                     </div>
-                `;
-                slidersContainer.appendChild(sliderRow);
-            });
+                  </th>
+                </tr>
+                <tr class="header-sub"><th style="width: 40px;">#</th><th>Hạng mục phát triển</th><th style="width: 45px;">Xóa</th></tr>
+              </thead>
+              <tbody id="tbody-learning"></tbody>
+            </table>
+          </div>
 
-            // Attach Event Listeners to new elements
-            const ranges = slidersContainer.querySelectorAll('input[type="range"]');
-            const numbers = slidersContainer.querySelectorAll('input[type="number"]');
-
-            ranges.forEach(range => {
-                range.addEventListener('input', (e) => handlePercentChange(e.target.dataset.index, e.target.value));
-            });
-            numbers.forEach(number => {
-                number.addEventListener('change', (e) => handlePercentChange(e.target.dataset.index, e.target.value));
-            });
-        };
-
-        const renderCards = () => {
-            cardsContainer.innerHTML = '';
-            jars.forEach(jar => {
-                const amount = (income * jar.percent) / 100;
-                const card = document.createElement('div');
-                card.className = 'glass-panel rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 border-t-4';
-                card.style.borderTopColor = jar.color;
-                
-                card.innerHTML = `
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md transform rotate-3" style="background-color: ${jar.color}">
-                                <i class="fa-solid ${jar.icon} text-xl"></i>
-                            </div>
-                            <span class="px-3 py-1 rounded-full text-sm font-bold text-white shadow-sm" style="background-color: ${jar.color}">
-                                ${jar.percent}%
-                            </span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">${jar.name}</h3>
-                        <p class="text-sm text-gray-500 mb-6 h-10 line-clamp-2">${jar.desc}</p>
-                        
-                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                            <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Số tiền phân bổ</p>
-                            <p class="text-2xl font-bold" style="color: ${jar.color}">
-                                ${formatCurrency(amount)}
-                            </p>
-                        </div>
+          
+          <div class="sheet-table-wrap">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-main-info">
+                  <th colspan="5">
+                    <div class="table-header-flex">
+                      <span class="title"><i class="fa-solid fa-cubes-stacked"></i> Danh mục sản phẩm đầu tư</span>
+                      <button class="btn-table-add" onclick="addInvestRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
                     </div>
-                `;
-                cardsContainer.appendChild(card);
-            });
-        };
+                  </th>
+                </tr>
+                <tr class="header-sub">
+                  <th style="width: 40px;">#</th><th>Sản phẩm tài chính</th><th style="width: 130px;">Lãi suất năm (%)</th><th style="width: 90px;">Rủi ro (%)</th><th style="width: 45px;">Xóa</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-invest"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-        const updateChart = () => {
-            const data = jars.map(j => j.percent);
-            const bgColors = jars.map(j => j.color);
-            const labels = jars.map(j => j.name);
+      
+      <div id="tab-dashboard" class="tab-pane">
 
-            if (chartInstance) {
-                chartInstance.data.datasets[0].data = data;
-                chartInstance.update();
-            } else {
-                const ctx = document.getElementById('jarChart').getContext('2d');
-                chartInstance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            data: data,
-                            backgroundColor: bgColors,
-                            borderWidth: 2,
-                            borderColor: '#ffffff',
-                            hoverOffset: 10
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '65%',
-                        plugins: {
-                            legend: {
-                                display: false // Hide default legend to keep it clean
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        label += context.parsed + '%';
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        };
+        <div class="dash-hero">
+          <div class="dash-hero-copy">
+            <span class="dash-hero-kicker"><i class="fa-solid fa-bolt"></i> Tổng quan năm <span class="dynamic-year">2026</span></span>
+            <h2 class="dash-hero-title">Dòng tiền của bạn, rõ ràng trong một cái nhìn</h2>
+            <p class="dash-hero-desc">Theo dõi thu nhập, chi tiêu và tiết kiệm ròng. Số liệu được tổng hợp tự động từ kế hoạch và nhật ký thu chi bạn đã nhập.</p>
+          </div>
+          <div class="dash-hero-actions">
+            <button type="button" class="btn-lime" onclick="switchMonthTab(AppState.currentMonth)"><i class="fa-solid fa-receipt"></i> Ghi thu chi tháng này</button>
+            <button type="button" class="btn-ghost-light" onclick="switchTab('tab-kehoach')"><i class="fa-solid fa-wallet"></i> Kế hoạch thu chi</button>
+          </div>
+        </div>
 
-        const validateTotal = () => {
-            const total = jars.reduce((sum, jar) => sum + jar.percent, 0);
-            totalPercentageDisplay.textContent = `${total}%`;
+        
+        <nav class="dash-shortcuts" aria-label="Lối tắt chức năng">
+          <button type="button" class="shortcut shortcut--plan" onclick="switchTab('tab-kehoach')">
+            <span class="shortcut-icon"><i class="fa-solid fa-wallet"></i></span>
+            <span class="shortcut-text"><span class="shortcut-title">Kế hoạch thu chi</span><span class="shortcut-desc">Dự tính thu nhập &amp; chi tiêu hàng tháng</span></span>
+            <i class="fa-solid fa-arrow-right shortcut-arrow"></i>
+          </button>
+          <button type="button" class="shortcut shortcut--month" onclick="switchMonthTab(AppState.currentMonth)">
+            <span class="shortcut-icon"><i class="fa-solid fa-receipt"></i></span>
+            <span class="shortcut-text"><span class="shortcut-title">Theo dõi thu chi</span><span class="shortcut-desc">Nhật ký và đối chiếu theo tháng</span></span>
+            <i class="fa-solid fa-arrow-right shortcut-arrow"></i>
+          </button>
+          <button type="button" class="shortcut shortcut--goal" onclick="switchTab('tab-muctieu-tc')">
+            <span class="shortcut-icon"><i class="fa-solid fa-vault"></i></span>
+            <span class="shortcut-text"><span class="shortcut-title">Mục tiêu tài chính</span><span class="shortcut-desc">Phân bổ và dòng tiền từng mục tiêu</span></span>
+            <i class="fa-solid fa-arrow-right shortcut-arrow"></i>
+          </button>
+          <button type="button" class="shortcut shortcut--route" onclick="switchTab('tab-candoi')">
+            <span class="shortcut-icon"><i class="fa-solid fa-route"></i></span>
+            <span class="shortcut-text"><span class="shortcut-title">Cân đối lộ trình</span><span class="shortcut-desc">Đối chiếu thu nhập với mục tiêu</span></span>
+            <i class="fa-solid fa-arrow-right shortcut-arrow"></i>
+          </button>
+        </nav>
+
+        
+        <div class="dash-kpi-three-strip">
+          <div class="dash-kpi-block kpi-modern-primary">
+            <div class="kpi-icon-wrap"><i class="fa-solid fa-piggy-bank"></i></div>
+            <div class="kpi-content-wrap">
+              <span class="kpi-title">Tiết kiệm ròng năm <span class="dynamic-year">2026</span></span>
+              <span class="kpi-num" id="kpi-dash-savings">0</span>
+            </div>
+          </div>
+          <div class="dash-kpi-block kpi-modern-success">
+            <div class="kpi-icon-wrap"><i class="fa-solid fa-sack-dollar"></i></div>
+            <div class="kpi-content-wrap">
+              <span class="kpi-title">Tổng thu nhập năm <span class="dynamic-year">2026</span></span>
+              <span class="kpi-num" id="kpi-dash-income">0</span>
+            </div>
+          </div>
+          <div class="dash-kpi-block kpi-modern-danger">
+            <div class="kpi-icon-wrap"><i class="fa-solid fa-receipt"></i></div>
+            <div class="kpi-content-wrap">
+              <span class="kpi-title">Tổng chi tiêu năm <span class="dynamic-year">2026</span></span>
+              <span class="kpi-num" id="kpi-dash-expense">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-kpi-sub-strip">
+          <div class="dash-kpi-block kpi-modern-warning">
+            <div class="kpi-icon-wrap"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="kpi-content-wrap">
+              <span class="kpi-title">Tổng tiết kiệm cần đạt</span>
+              <span class="kpi-num" id="dash-tc-total-savings">0</span>
+            </div>
+          </div>
+          <div class="dash-kpi-block kpi-modern-violet">
+            <div class="kpi-icon-wrap"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            <div class="kpi-content-wrap">
+              <span class="kpi-title">Mức sinh lời trung bình ước tính</span>
+              <span class="kpi-num" id="dash-tc-avg-return">0,00%</span>
+            </div>
+          </div>
+        </div>
+
+        
+        <section class="dash-section">
+          <div class="dash-section-head">
+            <h2 class="section-heading">Dòng tiền trong năm</h2>
+            <p class="section-hint">Thu nhập, chi phí và tiết kiệm theo từng tháng; so sánh chi tiêu thực tế với kế hoạch.</p>
+          </div>
+
+          <div class="dash-tc-charts-row">
+            <div class="chart-card dash-tc-card-pie">
+              <h3><i class="fa-solid fa-chart-pie"></i> Cơ cấu các mục tiêu tài chính</h3>
+              <div class="chart-container-compact dash-tc-pie-container" style="position: relative; height: 260px;">
+                <canvas id="chart-dashboard-tc-goals-pie"></canvas>
+              </div>
+            </div>
+            <div class="chart-card dash-tc-card-timeline">
+              <h3 style="text-align: center;"><i class="fa-solid fa-chart-line"></i> Theo dõi mục tiêu tài chính</h3>
+              <div class="chart-container-compact" style="position: relative; height: 260px;">
+                <canvas id="chart-dashboard-tc-timeline-dual"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="chart-card chart-card--wide">
+            <h3><i class="fa-solid fa-chart-simple"></i> Thu nhập - Chi phí - Dòng tiền tích lũy 12 tháng</h3>
+            <div class="chart-container-compact"><canvas id="chartDashCombo12"></canvas></div>
+          </div>
+          <div class="dash-grid-row-2">
+            <div class="chart-card">
+              <h3><i class="fa-solid fa-scale-balanced"></i> Chi tiêu thực tế so với Kế hoạch & Chênh lệch lũy kế</h3>
+              <div class="chart-container-compact"><canvas id="chartDashVariance"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="card-head-flex">
+                <h3><i class="fa-solid fa-graduation-cap"></i> Phân bổ chi tiêu phát triển bản thân</h3>
+                <div class="slicer-tags" id="dash-slicer-tags"></div>
+              </div>
+              <div class="chart-container-compact"><canvas id="chartDashLearningStack"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        
+        <section class="dash-section">
+          <div class="dash-section-head">
+            <h2 class="section-heading">Mục tiêu & đầu tư</h2>
+            <p class="section-hint">Cơ cấu mục tiêu, tiến độ tích lũy qua các năm và hiệu suất danh mục đầu tư mẫu.</p>
+          </div>
+          <div class="dash-grid-row-3">
+            <div class="chart-card">
+              <h3><i class="fa-solid fa-chart-pie"></i> Cơ cấu phân bổ các mục tiêu tài chính</h3>
+              <div class="chart-container-compact"><canvas id="chartDashGoalsPie"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <h3><i class="fa-solid fa-arrow-trend-up"></i> Tích lũy tiến độ mục tiêu qua các năm</h3>
+              <div class="chart-container-compact"><canvas id="chartDashGoalsLine"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <h3><i class="fa-solid fa-layer-group"></i> Hiệu suất danh mục đầu tư mẫu</h3>
+              <div class="chart-container-compact"><canvas id="chartDashInvestPie"></canvas></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="dashboard-matrix-container">
+          <div class="sheet-title-banner mb-3"><i class="fa-solid fa-table-list"></i> DỮ LIỆU MA TRẬN DÒNG TIỀN CHI TIẾT 12 THÁNG</div>
+
+          <div class="table-scroll-x mb-4 compact-dash-matrix">
+            <table class="excel-matrix-table" id="table-db-income">
+              <thead>
+                <tr class="header-main-success">
+                  <th style="min-width: 190px; text-align: left;">Hạng mục thu nhập</th>
+                  <th>T1</th><th>T2</th><th>T3</th><th>T4</th>
+                  <th>T5</th><th>T6</th><th>T7</th><th>T8</th>
+                  <th>T9</th><th>T10</th><th>T11</th><th>T12</th>
+                  <th style="min-width: 80px;">Tổng năm</th>
+                  <th style="min-width: 95px;">Xu hướng</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-db-income"></tbody>
+              <tfoot><tr class="matrix-total-row" id="tfoot-db-income-total"></tr></tfoot>
+            </table>
+          </div>
+
+          <div class="table-scroll-x mb-4 compact-dash-matrix">
+            <table class="excel-matrix-table" id="table-db-expense">
+              <thead>
+                <tr class="header-main-danger">
+                  <th style="min-width: 190px; text-align: left;">Hạng mục chi tiêu</th>
+                  <th>T1</th><th>T2</th><th>T3</th><th>T4</th>
+                  <th>T5</th><th>T6</th><th>T7</th><th>T8</th>
+                  <th>T9</th><th>T10</th><th>T11</th><th>T12</th>
+                  <th style="min-width: 80px;">Tổng năm</th>
+                  <th style="min-width: 95px;">Xu hướng</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-db-expense"></tbody>
+              <tfoot>
+                <tr class="matrix-total-row" id="tfoot-db-expense-total"></tr>
+                <tr class="matrix-sub-row" id="tfoot-db-expense-plan"></tr>
+                <tr class="matrix-sub-row" id="tfoot-db-expense-cumdiff"></tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="table-scroll-x mb-4 compact-dash-matrix">
+            <table class="excel-matrix-table">
+              <thead>
+                <tr class="header-main-primary">
+                  <th style="min-width: 190px; text-align: left;">Tiết kiệm ròng hàng tháng</th>
+                  <th>T1</th><th>T2</th><th>T3</th><th>T4</th>
+                  <th>T5</th><th>T6</th><th>T7</th><th>T8</th>
+                  <th>T9</th><th>T10</th><th>T11</th><th>T12</th>
+                  <th style="min-width: 80px;">Tổng năm</th>
+                  <th style="min-width: 95px;">Xu hướng</th>
+                </tr>
+              </thead>
+              <tbody><tr class="savings-highlight-row" id="trow-db-savings"></tr></tbody>
+            </table>
+          </div>
+
+          <div class="table-scroll-x mb-4 compact-dash-matrix">
+            <table class="excel-matrix-table" id="table-db-learning">
+              <thead>
+                <tr class="header-sub">
+                  <th style="min-width: 190px; text-align: left;">Phát triển bản thân</th>
+                  <th>T1</th><th>T2</th><th>T3</th><th>T4</th>
+                  <th>T5</th><th>T6</th><th>T7</th><th>T8</th>
+                  <th>T9</th><th>T10</th><th>T11</th><th>T12</th>
+                  <th style="min-width: 80px;">Tổng năm</th>
+                  <th style="min-width: 95px;">Xu hướng</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-db-learning"></tbody>
+              <tfoot><tr class="matrix-total-row" id="tfoot-db-learning-total"></tr></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="tab-muctieu-bt" class="tab-pane">
+        <div class="target-container">
+
+          <div class="target-section">
+            <div class="target-header-caption"><i class="fa-solid fa-flag"></i> ĐỊNH HƯỚNG TẦM NHÌN DÀI HẠN</div>
+            <div class="table-scroll-x">
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th style="width: 160px;">Mốc thời điểm</th>
+                    <th>Nội dung mục tiêu dài hạn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="cell-primary-light text-center font-bold cell-blue" contenteditable="true" spellcheck="false" id="vision-age-cell"></td>
+                    <td class="cell-primary-light cell-blue font-semibold" contenteditable="true" spellcheck="false" id="vision-desc-cell"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="target-section">
+            <div class="tc-import-container">
+              <div class="tc-import-header">
+                <div class="tc-import-title">
+                  <i class="fa-solid fa-bullseye text-primary"></i> DANH SÁCH ĐĂNG KÝ CÁC MỤC TIÊU TÀI CHÍNH
+                </div>
+                <button type="button" class="btn-table-add-prominent" onclick="addNewTcGoalRow()">
+                  <i class="fa-solid fa-plus"></i> Thêm mục tiêu mới
+                </button>
+              </div>
+
+              <div class="tc-form-table-wrap">
+                <table class="tc-input-table">
+                  <thead>
+                    <tr>
+                      <th class="th-name">Tên mục tiêu</th>
+                      <th class="th-type">Phân loại</th>
+                      <th class="th-num">Giá trị mục tiêu</th>
+                      <th class="th-num">Đã tích lũy</th>
+                      <th class="th-year">Năm bắt đầu</th>
+                      <th class="th-year">Năm hoàn tất</th>
+                      <th class="th-del">Xóa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-tc-form-goals"></tbody>
+                </table>
+                <div class="tc-form-bottom-bar">
+                  <span class="tc-form-hint">
+                    💡 <strong>Cơ chế tính toán dòng tiền:</strong><br>
+                    • <strong>Giá trị mục tiêu:</strong> Định giá tại thời điểm hiện tại. Hệ thống tự động bù trừ tiền đã có sẵn.<br>
+                    • <strong>Cơ chế tính toán:</strong> Dòng tiền đóng góp được tính tự động chuẩn công thức tài chính (PMT) và hiển thị chi tiết tại thẻ mục tiêu bên dưới.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="target-section">
+            <div class="table-scroll-x">
+              <table class="target-table">
+                <thead><tr><th class="text-center"><i class="fa-solid fa-percent"></i> Tỷ lệ thu nhập mục tiêu dành để tiết kiệm đầu tư</th></tr></thead>
+                <tbody><tr><td class="cell-primary-light text-center cell-blue font-bold font-mono" contenteditable="true" spellcheck="false" id="target-savings-rate-val">35%</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="target-section">
+            <div class="table-scroll-x">
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      <div class="table-header-flex">
+                        <span class="title"><i class="fa-solid fa-award"></i> Điểm mạnh & Giá trị cốt lõi bản thân</span>
+                        <button type="button" class="btn-table-add" onclick="addSkillRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                      </div>
+                    </th>
+                    <th style="width: 60px;" class="text-center">Xoá</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-skills"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="target-section">
+            <div class="table-scroll-x">
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      <div class="table-header-flex">
+                        <span class="title"><i class="fa-solid fa-people-roof"></i> Gia đình & Điểm tựa nguồn lực</span>
+                        <button type="button" class="btn-table-add" onclick="addFamilyRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                      </div>
+                    </th>
+                    <th style="width: 60px;" class="text-center">Xoá</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-family"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="target-section">
+            <div class="table-scroll-x">
+              <table class="target-table">
+                <thead>
+                  <tr>
+                    <th class="text-left">
+                      <div class="table-header-flex">
+                        <span class="title"><i class="fa-solid fa-briefcase"></i> Môi trường làm việc & Tiềm năng bứt phá</span>
+                        <button type="button" class="btn-table-add" onclick="addJobRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                      </div>
+                    </th>
+                    <th style="width: 60px;" class="text-center">Xoá</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-job"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="target-section survey-result-section">
+            <div class="survey-result-title"><i class="fa-solid fa-square-poll-vertical"></i> Kết quả phân tích từ Khảo sát bản thân</div>
+            <div class="survey-row">
+              <button class="btn-survey-link" onclick="openSurveyTab(1)"><i class="fa-solid fa-pen-to-square"></i> Khảo sát rủi ro</button>
+              <div class="survey-desc font-semibold text-theme-primary" id="survey-result-risk">Đang tính toán...</div>
+            </div>
+            <div class="survey-row">
+              <button class="btn-survey-link" onclick="openSurveyTab(2)"><i class="fa-solid fa-pen-to-square"></i> Khảo sát hoàn cảnh</button>
+              <div class="survey-desc font-semibold text-theme-primary" id="survey-result-context">Đang tính toán...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="tab-muctieu-tc" class="tab-pane">
+        <div class="custom-sheet-container full-width-sheet">
+
+          <div class="tc-subnav-bar mb-3">
+            <button type="button" class="btn-sub-nav active" id="btn-tc-sec1" onclick="switchTcSection(1)">
+              <i class="fa-solid fa-layer-group"></i> Phần 1: Bảng phân bổ chi tiết từng mục tiêu
+            </button>
+            <button type="button" class="btn-sub-nav" id="btn-tc-sec2" onclick="switchTcSection(2)">
+              <i class="fa-solid fa-chart-line"></i> Phần 2: Ma trận nhu cầu tiết kiệm và thu nhập
+            </button>
+          </div>
+
+          
+          <div id="tc-section-1" class="tc-section-pane active">
+            <div class="result-divider-header mb-3">
+              <div class="d-flex-center gap-2">
+                <i class="fa-solid fa-circle-check text-success"></i>
+                <span>Tất cả mục tiêu đã được tự động tính dòng tiền theo công thức tài chính chuẩn</span>
+              </div>
+              <button type="button" class="btn-next-step" onclick="switchTcSection(2)">
+                Xem Ma trận nhu cầu tiết kiệm và thu nhập <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="tc-two-columns-grid" id="tc-two-columns-grid">
+              <div class="tc-column tc-col-debt">
+                <div class="tc-column-banner debt-banner-head"><i class="fa-solid fa-hand-holding-dollar"></i> DANH MỤC TRẢ NỢ ĐỊNH KỲ</div>
+                <div class="tc-cards-list" id="tc-debt-cards-container"></div>
+              </div>
+              <div class="tc-column tc-col-invest">
+                <div class="tc-column-banner invest-banner-head"><i class="fa-solid fa-chart-pie"></i> DANH MỤC TÍCH LŨY & ĐẦU TƯ TĂNG TRƯỞNG</div>
+                <div class="tc-cards-list" id="tc-invest-cards-container"></div>
+              </div>
+            </div>
+
             
-            if (total === 100) {
-                totalPercentageDisplay.className = 'text-2xl font-bold text-emerald-600';
-                validationAlert.classList.add('hidden');
-            } else {
-                totalPercentageDisplay.className = 'text-2xl font-bold text-red-500';
-                validationAlert.classList.remove('hidden');
-                
-                if (total > 100) {
-                    validationMsg.textContent = `Tổng phần trăm hiện tại là ${total}%. Vượt quá ${total - 100}%. Vui lòng giảm bớt.`;
-                } else {
-                    validationMsg.textContent = `Tổng phần trăm hiện tại là ${total}%. Còn thiếu ${100 - total}%. Vui lòng phân bổ thêm.`;
-                }
-            }
-        };
+            <div id="tc-empty-state" class="tc-empty-state" style="display: none;">
+              <div class="tc-empty-icon"><i class="fa-solid fa-vault"></i></div>
+              <div class="tc-empty-title">Chưa có mục tiêu trả nợ định kỳ hoặc tích lũy đầu tư</div>
+              <div class="tc-empty-desc">Danh mục này hiện chưa có dữ liệu mục tiêu tài chính hợp lệ để hiển thị thẻ tính toán. Hãy thêm mục tiêu tại bảng thiết lập hoặc nhập dữ liệu đã sao lưu.</div>
+              <div class="tc-empty-actions">
+                <button type="button" class="btn-table-add-prominent" onclick="switchTab('tab-muctieu-bt')">
+                  <i class="fa-solid fa-plus"></i> Thêm mục tiêu tài chính
+                </button>
+                <button type="button" class="btn-cloud-sync" onclick="openBackupManagerModal()">
+                  <i class="fa-solid fa-cloud-arrow-down"></i> Nhập dữ liệu sao lưu
+                </button>
+              </div>
+            </div>
+          </div>
 
-        const handlePercentChange = (index, newValue) => {
-            let val = parseInt(newValue, 10);
-            if (isNaN(val)) val = 0;
-            if (val > 100) val = 100;
-            if (val < 0) val = 0;
+          
+          <div id="tc-section-2" class="tc-section-pane">
+            <div class="tc-matrix-header-box mb-3">
+              <div>
+                <div class="sheet-title-text"><i class="fa-solid fa-timeline"></i> Ma trận nhu cầu tiết kiệm và thu nhập</div>
+                <div class="tc-matrix-desc">Dữ liệu tính toán dựa trên mức đóng góp của từng mục tiêu tại từng thời điểm theo tỷ lệ tiết kiệm 40%.</div>
+              </div>
+            </div>
 
-            jars[index].percent = val;
+            <div class="tc-chart-card mb-4">
+              <div class="tc-chart-title">Mức tiết kiệm và Thu nhập cần đạt (Hàng tháng)</div>
+              <div class="tc-chart-canvas-wrap"><canvas id="tcMatrixChart"></canvas></div>
+            </div>
+
+            <div class="compact-matrix-container">
+              <table class="excel-matrix-table compact-matrix-table" id="table-tc-matrix">
+                <thead><tr class="header-main-primary" id="tr-tc-matrix-head"></tr></thead>
+                <tbody id="tbody-tc-matrix"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      
+      <div id="tab-candoi" class="tab-pane">
+        <div class="custom-sheet-container full-width-sheet">
+
+          <div class="tc-subnav-bar mb-3">
+            <button type="button" class="btn-sub-nav active" id="btn-career-sec1" onclick="switchCareerSection(1)">
+              <i class="fa-solid fa-pie-chart"></i> Phần 1: Phân bổ công cụ tài chính & Kỹ năng theo tuổi
+            </button>
+            <button type="button" class="btn-sub-nav" id="btn-career-sec2" onclick="switchCareerSection(2)">
+              <i class="fa-solid fa-arrow-trend-up"></i> Phần 2: Đối chiếu lộ trình nghề nghiệp và mục tiêu
+            </button>
+          </div>
+
+          <div class="career-fixed-chart-wrapper mb-4">
+            <div class="tc-chart-card fixed-size-card">
+              <div class="tc-chart-title">So sánh: Thu nhập cần kiếm để đạt mục tiêu và Thu nhập theo lộ trình dự kiến</div>
+              <div class="career-canvas-container"><canvas id="careerChart"></canvas></div>
+            </div>
+          </div>
+
+          <div id="career-sec-1" class="career-section-pane active">
+            <div class="mb-3">
+              <div class="sheet-title-text"><i class="fa-solid fa-layer-group"></i> Lộ trình phân bổ tài sản & Phát triển chuyên môn theo từng giai đoạn</div>
+            </div>
+            <div class="table-scroll-x">
+              <table class="excel-table-bordered">
+                <thead>
+                  <tr class="bg-header-primary">
+                    <th rowspan="2" style="width: 70px;">Độ tuổi</th>
+                    <th rowspan="2" style="width: 150px;" title="Thu nhập cần có = Tiết kiệm cần có / Tỷ lệ tiết kiệm mục tiêu (Công thức Excel: =AA107/'Mục tiêu bản thân'!$I$24)">Thu nhập cần có / tháng <i class="fa-solid fa-circle-info text-muted" style="font-size: 11px;"></i></th>
+                    <th colspan="4" title="Cơ cấu danh mục đầu tư khuyến nghị theo lý thuyết phân bổ tài sản theo vòng đời (Life-Cycle Asset Allocation)">Cơ cấu danh mục đầu tư khuyến nghị <i class="fa-solid fa-circle-info text-muted" style="font-size: 11px;"></i></th>
+                    <th rowspan="2" style="width: 150px;" title="Lãi suất kỳ vọng bình quân gia quyền theo danh mục tài sản khuyến nghị">Lãi suất kỳ vọng (%/năm)</th>
+                    <th rowspan="2" style="min-width: 260px;">Kỹ năng cốt lõi cần trui rèn</th>
+                  </tr>
+                  <tr class="bg-header-sub">
+                    <th style="width: 95px;">Cổ phiếu</th>
+                    <th style="width: 95px;">Trái phiếu</th>
+                    <th style="width: 95px;">Bảo hiểm</th>
+                    <th style="width: 95px;">Tiền gửi NH</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-career-overview"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="career-sec-2" class="career-section-pane">
+            <div class="sheet-title-text mb-3"><i class="fa-solid fa-scale-balanced"></i> Kiểm tra tính khả thi của lộ trình thu nhập cá nhân</div>
+            <div class="table-scroll-x">
+              <table class="excel-table-bordered">
+                <thead>
+                  <tr class="bg-header-primary">
+                    <th style="width: 70px;">Số tuổi</th>
+                    <th style="width: 180px;">Thu nhập thực tế<br></th>
+                    <th style="width: 190px;">Mức cần có để đạt mục tiêu<br></th>
+                    <th style="width: 220px;">Lộ trình thu nhập kỳ vọng<br></th>
+                    <th>Đánh giá khả năng về đích</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-career-detail"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      
+      <div id="tab-kehoach" class="tab-pane">
+        <div class="custom-sheet-container full-width-sheet">
+
+          <div class="data-panel mb-4">
+            <div class="sheet-title-banner flex-between">
+              <span><i class="fa-solid fa-coins"></i> PHẦN 1: TIỀN DỰ TÍNH KIẾM ĐƯỢC MỖI THÁNG</span>
+              <button class="btn-table-add" onclick="addPlanIncomeDirect()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm khoản thu</span></button>
+            </div>
+            <div class="table-scroll-x">
+              <table class="excel-table-bordered">
+                <thead>
+                  <tr class="bg-header-success">
+                    <th style="width: 45px;">#</th>
+                    <th style="width: 220px;">Khoản thu</th>
+                    <th style="width: 150px;">Số tiền dự tính</th>
+                    <th style="width: 220px;">Ghi chú chi tiết</th>
+                    <th>Mức độ ổn định</th>
+                    <th style="width: 45px;">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-plan-inc"></tbody>
+                <tfoot>
+                  <tr class="bg-total-row">
+                    <td colspan="2" class="font-bold">Tổng thu nhập dự tính hàng tháng</td>
+                    <td class="text-right text-success font-bold font-mono" id="plan-sum-inc-val">0.00</td>
+                    <td colspan="3"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="data-panel">
+            <div class="sheet-title-banner flex-between">
+              <span><i class="fa-solid fa-credit-card"></i> PHẦN 2: MỨC TIỀN DỰ TÍNH TIÊU MỖI THÁNG</span>
+              <button class="btn-table-add" onclick="addPlanExpenseDirect()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm khoản chi</span></button>
+            </div>
+            <div class="table-scroll-x">
+              <table class="excel-table-bordered">
+                <thead>
+                  <tr class="bg-header-danger">
+                    <th style="width: 45px;">#</th>
+                    <th style="width: 220px;">Khoản mục chi tiêu</th>
+                    <th style="width: 150px;">Mức chi tối đa</th>
+                    <th style="width: 220px;">Ghi chú chi tiết</th>
+                    <th>Mức độ cần thiết</th>
+                    <th style="width: 45px;">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-plan-exp"></tbody>
+                <tfoot>
+                  <tr class="bg-total-row">
+                    <td colspan="2" class="font-bold">Tổng chi tiêu dự tính hàng tháng</td>
+                    <td class="text-right text-danger font-bold font-mono" id="plan-sum-exp-val">0.00</td>
+                    <td colspan="3"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      
+      <div id="tab-month" class="tab-pane">
+        <div class="custom-sheet-container full-width-sheet">
+
+          <div class="sub-nav-bar mb-3">
+            <button type="button" class="btn-sub-nav active" id="btn-month-sec1" onclick="switchMonthSection(1)">
+              <i class="fa-solid fa-receipt"></i> Nhật ký & Đối chiếu thu chi thực tế
+            </button>
+            <button type="button" class="btn-sub-nav" id="btn-month-sec2" onclick="switchMonthSection(2)">
+              <i class="fa-solid fa-graduation-cap"></i> Nhật ký chi phí học tập & Đào tạo
+            </button>
+            <button type="button" class="btn-sub-nav" id="btn-month-sec3" style="display: none;" onclick="switchMonthSection(3)">
+              <i class="fa-solid fa-scale-balanced"></i> Bảng cân đối tài sản - nợ cuối năm
+            </button>
+          </div>
+
+          <div id="month-sec-1" class="month-section-pane active">
+            <div class="month-top-grid mb-4">
+              <div class="month-kpi-stack">
+                <div class="kpi-box box-modern-success">
+                  <div class="kpi-lbl">Tổng thu thực tế</div>
+                  <div class="kpi-val" id="m-summary-income">0</div>
+                </div>
+                <div class="kpi-box box-modern-danger">
+                  <div class="kpi-lbl">Tổng chi thực tế</div>
+                  <div class="kpi-val" id="m-summary-expense">0</div>
+                </div>
+                <div class="kpi-box box-modern-primary">
+                  <div class="kpi-lbl">Tiết kiệm dôi dư</div>
+                  <div class="kpi-val" id="m-summary-savings">0</div>
+                </div>
+              </div>
+              <div class="month-chart-box">
+                <div class="chart-box-title"><i class="fa-solid fa-chart-bar"></i> Phân bổ các nhóm chi tiêu trong tháng</div>
+                <div class="month-bar-canvas-wrap"><canvas id="monthExpenseBarChart"></canvas></div>
+              </div>
+            </div>
+
+            <div class="side-tables-grid mb-4">
+              <div class="side-table-col">
+                <div class="table-header-bar success-bar">
+                  <span><i class="fa-solid fa-circle-plus"></i> Nhật ký thu nhập chi tiết</span>
+                  <button class="btn-table-add" onclick="addMonthDetailIncomeRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                </div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th style="width: 135px; min-width: 130px;">Ngày</th>
+                        <th>Nguồn thu</th>
+                        <th>Chi tiết giao dịch</th>
+                        <th style="width: 110px; min-width: 100px;">Số tiền</th>
+                        <th style="width: 40px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-m-detail-income"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td colspan="3" class="font-bold text-center">Tổng thu nhập</td>
+                        <td class="text-right font-bold text-success font-mono" id="tfoot-m-inc-total">0.0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="side-table-col">
+                <div class="table-header-bar success-bar"><span><i class="fa-solid fa-code-compare"></i> Đối chiếu thu nhập: Kế hoạch vs Thực tế</span></div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th>Danh mục</th><th style="width: 75px;">Kế hoạch</th><th style="width: 75px;">Thực tế</th><th style="width: 85px;">Chênh lệch</th><th>Nguyên nhân</th><th>Giải pháp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-m-recon-income"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td class="font-bold">Tổng cộng</td>
+                        <td class="text-right font-bold font-mono" id="tfoot-recon-inc-plan">0.0</td>
+                        <td class="text-right font-bold text-success font-mono" id="tfoot-recon-inc-act">0.0</td>
+                        <td class="text-right font-bold text-danger font-mono" id="tfoot-recon-inc-diff">0.0</td>
+                        <td colspan="2"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="side-tables-grid mb-4">
+              <div class="side-table-col">
+                <div class="table-header-bar warning-bar">
+                  <span><i class="fa-solid fa-circle-minus"></i> Nhật ký chi tiêu chi tiết</span>
+                  <button class="btn-table-add" onclick="addMonthDetailExpenseRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                </div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th style="width: 135px; min-width: 130px;">Ngày</th>
+                        <th>Khoản chi</th>
+                        <th>Chi tiết giao dịch</th>
+                        <th style="width: 110px; min-width: 100px;">Số tiền</th>
+                        <th style="width: 40px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-m-detail-expense"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td colspan="3" class="font-bold text-center">Tổng chi tiêu</td>
+                        <td class="text-right font-bold text-danger font-mono" id="tfoot-m-exp-total">0.0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="side-table-col">
+                <div class="table-header-bar warning-bar"><span><i class="fa-solid fa-code-compare"></i> Đối chiếu chi tiêu: Kế hoạch vs Thực tế</span></div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th>Danh mục</th><th style="width: 75px;">Kế hoạch</th><th style="width: 75px;">Thực tế</th><th style="width: 85px;">Chênh lệch</th><th>Nguyên nhân</th><th>Giải pháp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-m-recon-expense"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td class="font-bold">Tổng cộng</td>
+                        <td class="text-right font-bold font-mono" id="tfoot-recon-exp-plan">0.0</td>
+                        <td class="text-right font-bold text-danger font-mono" id="tfoot-recon-exp-act">0.0</td>
+                        <td class="text-right font-bold text-danger font-mono" id="tfoot-recon-exp-diff">0.0</td>
+                        <td colspan="2"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div id="month-sec-2" class="month-section-pane">
+
+            <div class="learning-kpi-strip mb-4">
+              <div class="learning-kpi-card kpi-card-cyan">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Tổng kinh phí học tập</div>
+                  <div class="kpi-value"><span id="m-learn-kpi-total">0.00</span> <small>tr</small></div>
+                </div>
+              </div>
+              <div class="learning-kpi-card kpi-card-purple">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-book-bookmark"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Số mục đã ghi nhận</div>
+                  <div class="kpi-value"><span id="m-learn-kpi-count">0</span> <small>mục</small></div>
+                </div>
+              </div>
+              <div class="learning-kpi-card kpi-card-mint">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Hạng mục trọng điểm</div>
+                  <div class="kpi-value kpi-text-value" id="m-learn-kpi-top">Chưa có</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="learning-grid">
+              <div class="learning-left-col">
+                <div class="table-header-bar info-bar">
+                  <span><i class="fa-solid fa-book-open"></i> Nhật ký chi phí học tập & Đào tạo</span>
+                  <button class="btn-table-add" onclick="addMonthLearningRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm</span></button>
+                </div>
+                <div class="mobile-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Cuộn ngang để xem đầy đủ cột</div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th style="width: 135px; min-width: 130px;">Ngày</th>
+                        <th>Hạng mục</th>
+                        <th>Khóa học / Chứng chỉ / Sách</th>
+                        <th style="width: 110px; min-width: 100px;">Số tiền</th>
+                        <th>Kỳ vọng đầu ra</th>
+                        <th>Thực tế đạt được</th>
+                        <th style="width: 40px;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-m-learning-detail"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td colspan="3" class="font-bold text-center">Tổng kinh phí đầu tư bản thân</td>
+                        <td class="text-right font-bold text-info font-mono" id="tfoot-m-learn-total">0.00</td>
+                        <td colspan="3"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="learning-right-col">
+                <div class="table-header-bar info-bar"><span><i class="fa-solid fa-chart-column"></i> Tổng kết theo nhóm đào tạo</span></div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub"><th>Hạng mục</th><th style="width: 105px;">Số tiền</th></tr>
+                    </thead>
+                    <tbody id="tbody-m-learning-stat"></tbody>
+                    <tfoot>
+                      <tr class="bg-total-row">
+                        <td class="font-bold">Tổng cộng</td>
+                        <td class="text-right font-bold text-info font-mono" id="tfoot-m-learn-stat-total">0.00</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="month-sec-3" class="month-section-pane">
+            <div class="table-header-bar info-bar mb-3">
+              <span><i class="fa-solid fa-scale-balanced"></i> BẢNG CÂN ĐỐI TÀI SẢN - NỢ VÀ GIÁ TRỊ TÀI SẢN RÒNG CUỐI NĂM (THÁNG 12)</span>
+            </div>
+
+            <div class="learning-kpi-strip mb-4">
+              <div class="learning-kpi-card kpi-card-cyan">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-vault"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Tổng tài sản cuối năm</div>
+                  <div class="kpi-value"><span id="bs-kpi-total-assets">0.00</span> <small>tr</small></div>
+                </div>
+              </div>
+              <div class="learning-kpi-card kpi-card-purple">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Tổng nợ &amp; nghĩa vụ</div>
+                  <div class="kpi-value"><span id="bs-kpi-total-liabilities">0.00</span> <small>tr</small></div>
+                </div>
+              </div>
+              <div class="learning-kpi-card kpi-card-mint">
+                <div class="kpi-icon-wrap"><i class="fa-solid fa-gem"></i></div>
+                <div class="kpi-info-wrap">
+                  <div class="kpi-label">Giá trị tài sản ròng (Net Worth)</div>
+                  <div class="kpi-value font-bold" id="bs-kpi-net-worth">0.00 <small>tr</small></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="side-tables-grid mb-4">
+              <div class="side-table-col">
+                <div class="table-header-bar success-bar">
+                  <span><i class="fa-solid fa-vault"></i> BÊN TÀI SẢN (CÁC LOẠI TÀI SẢN ĐANG NẮM GIỮ)</span>
+                  <button type="button" class="btn-table-add" onclick="addBalanceSheetAssetRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm tài sản</span></button>
+                </div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th style="width: 45px; text-align: center;">STT</th>
+                        <th style="width: 170px; min-width: 165px; text-align: left;">Nguồn tài sản</th>
+                        <th style="text-align: left;">Loại tài sản đang nắm giữ</th>
+                        <th style="width: 170px; text-align: right;">Giá trị cuối kỳ (triệu)</th>
+                        <th style="width: 45px; text-align: center;">Xóa</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-bs-assets"></tbody>
+                    <tfoot>
+                      <tr class="bg-neutral-gray font-semibold">
+                        <td colspan="3">Cộng tài sản đầu tư &amp; tích lũy</td>
+                        <td class="text-right font-mono font-bold text-success" id="tfoot-bs-assets-subtotal">0.0</td>
+                        <td></td>
+                      </tr>
+                      <tr class="bg-neutral-gray">
+                        <td colspan="3"><i class="fa-solid fa-user-tie text-muted mr-1"></i> Nguồn lực con người (Tổng thu nhập thực tế 1 năm)</td>
+                        <td class="text-right font-mono font-bold text-success" id="bs-human-capital-income">0.0</td>
+                        <td></td>
+                      </tr>
+                      <tr class="bg-total-row">
+                        <td colspan="3" class="font-bold uppercase text-primary">TỔNG TÀI SẢN (A)</td>
+                        <td class="text-right font-bold text-success font-mono font-size-lg" id="tfoot-bs-total-assets">0.0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <div class="side-table-col">
+                <div class="table-header-bar danger-bar">
+                  <span><i class="fa-solid fa-hand-holding-dollar"></i> BÊN NỢ &amp; NGHĨA VỤ (CÁC KHOẢN NỢ ĐANG VAY)</span>
+                  <button type="button" class="btn-table-add" onclick="addBalanceSheetLiabilityRow()"><i class="fa-solid fa-plus"></i><span class="btn-text">Thêm khoản nợ</span></button>
+                </div>
+                <div class="table-scroll-x">
+                  <table class="excel-table-bordered">
+                    <thead>
+                      <tr class="bg-header-sub">
+                        <th style="width: 50px; text-align: center;">STT</th>
+                        <th style="text-align: left;">Khoản nợ / Nghĩa vụ phải trả</th>
+                        <th style="width: 170px; text-align: right;">Số dư nợ cuối kỳ (triệu)</th>
+                        <th style="width: 50px; text-align: center;">Xóa</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-bs-liabilities"></tbody>
+                    <tfoot>
+                      <tr class="bg-neutral-gray font-semibold">
+                        <td colspan="2">Cộng các khoản nợ đang vay</td>
+                        <td class="text-right font-mono font-bold text-danger" id="tfoot-bs-liab-subtotal">0.0</td>
+                        <td></td>
+                      </tr>
+                      <tr class="bg-neutral-gray">
+                        <td colspan="2"><i class="fa-solid fa-receipt text-muted mr-1"></i> Chi phí sinh hoạt (Tổng chi phí thực tế 1 năm)</td>
+                        <td class="text-right font-mono font-bold text-danger" id="bs-obligations-expense">0.0</td>
+                        <td></td>
+                      </tr>
+                      <tr class="bg-total-row">
+                        <td colspan="2" class="font-bold uppercase text-danger">TỔNG NỢ &amp; NGHĨA VỤ (B)</td>
+                        <td class="text-right font-bold text-danger font-mono font-size-lg" id="tfoot-bs-total-liab">0.0</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="gform-summary-result mb-4" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div class="result-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <div class="result-text">
+                  <strong class="font-size-md uppercase">KẾT QUẢ CÂN ĐỐI TÀI CHÍNH CUỐI NĂM (TÀI SẢN TRỪ NỢ):</strong>
+                  <div class="text-muted font-size-sm mt-1">Giá trị tài sản ròng phản ánh thực chất lượng tài sản tích lũy của bạn sau khi thanh toán toàn bộ các nghĩa vụ nợ.</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 24px; margin-left: auto;">
+                <div class="text-right">
+                  <div class="text-muted font-size-xs uppercase">Tài sản ròng (A - B)</div>
+                  <div class="font-size-xl font-bold font-mono" id="bs-net-worth-val">0.0 tr</div>
+                </div>
+                <div class="text-right pl-3" style="border-left: 1px solid var(--border);">
+                  <div class="text-muted font-size-xs uppercase">Tỷ lệ đòn bẩy (Nợ/Tài sản)</div>
+                  <div class="font-size-md font-bold font-mono" id="bs-debt-ratio-val">0.0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      
+      <div id="tab-khaosat" class="tab-pane">
+        <div class="gform-container">
+
+          <div class="gform-header-card">
+            <div class="gform-stripe"></div>
+            <div class="gform-header-content">
+              <h2 class="gform-title"><i class="fa-solid fa-shield-halved text-primary"></i> KHẢO SÁT KHẢ NĂNG CHẤP NHẬN RỦI RO & HOÀN CẢNH TÀI CHÍNH</h2>
+              <p class="gform-desc">
+                Phiếu trắc nghiệm tâm lý học tài chính chuẩn mực, giúp định hình phong cách phân bổ tài sản phù hợp nhất với khẩu vị rủi ro và điều kiện thực tế của bạn.
+              </p>
+              <div class="gform-top-actions">
+                <button type="button" class="btn-gform-back" onclick="switchTab('tab-muctieu-bt')">
+                  <i class="fa-solid fa-arrow-left"></i> Quay lại Mục tiêu bản thân
+                </button>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="survey-nav-three" id="survey-nav-three" role="tablist" aria-label="Điều hướng 3 phần khảo sát">
+            <button type="button" class="survey-nav-tab active" id="survey-step-btn-1" onclick="goToSurveyStep(1)" role="tab" aria-selected="true">
+              <div class="nav-tab-badge">1</div>
+              <div class="nav-tab-text">
+                <span class="nav-tab-title">Phần 1: Khẩu vị rủi ro</span>
+                <span class="nav-tab-sub">10 câu trắc nghiệm</span>
+              </div>
+              <span class="nav-tab-status" id="survey-tab-stat-1">0/10 câu</span>
+            </button>
+
+            <button type="button" class="survey-nav-tab" id="survey-step-btn-2" onclick="goToSurveyStep(2)" role="tab" aria-selected="false">
+              <div class="nav-tab-badge">2</div>
+              <div class="nav-tab-text">
+                <span class="nav-tab-title">Phần 2: Hoàn cảnh &amp; Trách nhiệm</span>
+                <span class="nav-tab-sub">11 câu hoàn cảnh</span>
+              </div>
+              <span class="nav-tab-status" id="survey-tab-stat-2">0/11 câu</span>
+            </button>
+
+            <button type="button" class="survey-nav-tab" id="survey-step-btn-3" onclick="goToSurveyStep(3)" role="tab" aria-selected="false">
+              <div class="nav-tab-badge"><i class="fa-solid fa-flag-checkered"></i></div>
+              <div class="nav-tab-text">
+                <span class="nav-tab-title">Kết luận &amp; Khuyến nghị</span>
+                <span class="nav-tab-sub">Đánh giá &amp; Phân bổ</span>
+              </div>
+              <span class="nav-tab-status" id="survey-tab-stat-3">Chưa hoàn tất</span>
+            </button>
+          </div>
+
+          
+          <div class="survey-progress-box">
+            <div class="survey-progress-meta">
+              <span id="survey-progress-lbl">Tiến độ Phần 1: Khẩu vị rủi ro (0/10 câu đã chọn)</span>
+              <strong id="survey-progress-stat">0 / 21 câu hỏi (0%)</strong>
+            </div>
+            <div class="survey-progress-track">
+              <div class="survey-progress-fill" id="survey-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          
+          <div id="survey-step-pane-1" class="survey-step-pane active">
+            <div class="gform-section-banner banner-primary">
+              <div class="gform-section-badge">Khảo sát 1 • 10 câu</div>
+              <h3>Mức độ chấp nhận rủi ro trong quản lý &amp; đầu tư (Câu 1 đến Câu 10)</h3>
+            </div>
+
+            <div id="gform-questions-p1" class="gform-questions-flow"></div>
+
+            <div class="survey-step-actions">
+              <button type="button" class="btn-survey-action btn-survey-next" onclick="goToSurveyStep(2)">
+                <span>Tiếp tục sang Phần 2 (Câu 11–21)</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          
+          <div id="survey-step-pane-2" class="survey-step-pane">
+            <div class="gform-section-banner banner-indigo">
+              <div class="gform-section-badge">Khảo sát 2 • 11 câu</div>
+              <h3>Hoàn cảnh gia đình, trách nhiệm &amp; môi trường phát triển (Câu 11 đến Câu 21)</h3>
+            </div>
+
+            <div id="gform-questions-p2" class="gform-questions-flow"></div>
+
+            <div class="survey-step-actions between">
+              <button type="button" class="btn-survey-action btn-survey-prev" onclick="goToSurveyStep(1)">
+                <i class="fa-solid fa-arrow-left"></i> <span>Quay lại Phần 1 (Câu 1–10)</span>
+              </button>
+              <button type="button" class="btn-survey-action btn-survey-next" onclick="goToSurveyStep(3)">
+                <span>Xem kết luận</span> <i class="fa-solid fa-circle-check"></i>
+              </button>
+            </div>
+          </div>
+
+          
+          <div id="survey-step-pane-3" class="survey-step-pane">
+
+            <div class="survey-incomplete-banner" id="survey-incomplete-banner">
+              <div class="banner-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div class="banner-body">
+                <h4 class="banner-title">Khảo sát chưa hoàn thành đầy đủ</h4>
+                <p class="banner-desc">
+                  Bạn chưa hoàn thành đầy đủ 21 câu hỏi (Hiện tại: <strong id="survey-missing-count">0</strong>/21 câu). Kết quả dưới đây là ước tính sơ bộ. Hãy hoàn thành các câu hỏi còn thiếu để có khuyến nghị chính xác nhất.
+                </p>
+                <div class="banner-quick-links">
+                  <button type="button" class="btn-banner-link" id="btn-banner-p1" onclick="goToSurveyStep(1)">
+                    <i class="fa-solid fa-arrow-left"></i> Hoàn thành Phần 1 (<span id="banner-p1-remain">10 câu còn thiếu</span>)
+                  </button>
+                  <button type="button" class="btn-banner-link" id="btn-banner-p2" onclick="goToSurveyStep(2)">
+                    <i class="fa-solid fa-arrow-right"></i> Hoàn thành Phần 2 (<span id="banner-p2-remain">11 câu còn thiếu</span>)
+                  </button>
+                </div>
+              </div>
+            </div>
+
             
-            // Sync ranges and number inputs
-            const ranges = document.querySelectorAll('input[type="range"]');
-            const numbers = document.querySelectorAll('input[type="number"]');
-            ranges[index].value = val;
-            numbers[index].value = val;
+            <div class="survey-complete-badge" id="survey-complete-badge" style="display: none;">
+              <div class="complete-badge-icon"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="complete-badge-text">
+                <strong>Đã hoàn thành đầy đủ 21/21 câu hỏi</strong>
+                <span>Kết quả trắc nghiệm và khuyến nghị phân bổ tài sản đạt độ tin cậy và chính xác cao nhất</span>
+              </div>
+            </div>
 
-            validateTotal();
-            updateChart();
-            renderCards();
-        };
+            <div class="survey-result-summary-card">
+              <div class="result-card-header">
+                <div class="result-card-badge">
+                  <i class="fa-solid fa-square-poll-vertical"></i>
+                </div>
+                <div class="result-card-text">
+                  <h3 class="result-card-title">KẾT QUẢ ĐÁNH GIÁ TỔNG HỢP &amp; KHUYẾN NGHỊ ĐẦU TƯ</h3>
+                  <p class="result-card-sub">Dựa trên đầy đủ 21 câu hỏi trắc nghiệm tâm lý rủi ro và hoàn cảnh tài chính thực tế</p>
+                </div>
+              </div>
 
-        // Event Listeners
-        incomeInput.addEventListener('input', (e) => {
-            // Format input value
-            const formatted = formatInputCurrency(e.target.value);
-            e.target.value = formatted;
-            
-            // Update state and UI
-            income = parseCurrency(formatted);
-            renderCards();
-        });
+              <div class="result-dual-grid">
+                <div class="result-pillar-card pillar-risk">
+                  <div class="pillar-header-row">
+                    <div class="pillar-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="pillar-meta">
+                      <span class="pillar-badge-sub">Phần 1 • 10 câu</span>
+                      <h4 class="pillar-title">Khẩu vị rủi ro</h4>
+                    </div>
+                  </div>
+                  <div class="pillar-badge-box">
+                    <span class="pillar-value pillar-badge" id="survey-summary-risk-title">Đang xác định...</span>
+                  </div>
+                  <div class="pillar-desc-box">
+                    <div class="desc-box-label"><i class="fa-regular fa-lightbulb"></i> Khuyến nghị phân bổ:</div>
+                    <p class="pillar-desc" id="survey-summary-risk-desc">Vui lòng hoàn thành Phần 1 để xem phân tích chi tiết.</p>
+                  </div>
+                </div>
 
-        resetBtn.addEventListener('click', () => {
-            jars = JSON.parse(JSON.stringify(defaultJars));
-            renderSliders();
-            validateTotal();
-            updateChart();
-            renderCards();
-        });
+                <div class="result-pillar-card pillar-circumstance">
+                  <div class="pillar-header-row">
+                    <div class="pillar-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="pillar-meta">
+                      <span class="pillar-badge-sub">Phần 2 • 11 câu</span>
+                      <h4 class="pillar-title">Điều kiện phát triển</h4>
+                    </div>
+                  </div>
+                  <div class="pillar-badge-box">
+                    <span class="pillar-value pillar-badge" id="survey-summary-circumstance-title">Đang xác định...</span>
+                  </div>
+                  <div class="pillar-desc-box">
+                    <div class="desc-box-label"><i class="fa-solid fa-seedling"></i> Đánh giá môi trường:</div>
+                    <p class="pillar-desc" id="survey-summary-circumstance-desc">Vui lòng hoàn thành Phần 2 để xem phân tích chi tiết.</p>
+                  </div>
+                </div>
+              </div>
 
-        // Initialize App
-        const init = () => {
-            renderSliders();
-            validateTotal();
-            updateChart();
-            renderCards();
-        };
+              <div class="result-synthesis-callout">
+                <div class="synthesis-callout-icon">
+                  <i class="fa-solid fa-compass-drafting"></i>
+                </div>
+                <div class="synthesis-callout-body">
+                  <span class="synthesis-callout-title">Bước tiếp theo: Đồng bộ vào Kế hoạch Tài chính</span>
+                  <p class="synthesis-callout-text">
+                    Kết quả trắc nghiệm tâm lý và hoàn cảnh thực tế đã được đồng bộ hóa. Bạn có thể xem đề xuất phân bổ tài sản chi tiết tại mục Dashboard hoặc điều chỉnh câu trả lời bất cứ lúc nào.
+                  </p>
+                </div>
+              </div>
 
-        // Start
-        window.onload = init;
+              <div class="result-actions-footer">
+                <button type="button" class="btn-survey-action btn-survey-prev" onclick="goToSurveyStep(1)">
+                  <i class="fa-solid fa-pen-to-square"></i> <span>Chỉnh sửa câu trả lời</span>
+                </button>
+                <button type="button" class="btn-survey-action btn-survey-primary" onclick="switchTab('tab-dashboard')">
+                  <span>Xem Dashboard phân bổ tài sản</span> <i class="fa-solid fa-chart-pie"></i>
+                </button>
+              </div>
+            </div>
+          </div>
 
-    </script>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  
+
+
+  <div id="confirm-modal-overlay" class="modal-overlay confirm-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" style="display: none;">
+    <div class="modal-card confirm-modal-card" id="confirm-modal-card">
+      <div class="modal-header confirm-modal-header" id="confirm-modal-header">
+        <div class="modal-icon-badge" id="confirm-modal-icon-badge">
+          <i class="fa-solid fa-triangle-exclamation" id="confirm-modal-icon"></i>
+        </div>
+        <div class="modal-title-group">
+          <h3 id="confirm-modal-title">Xác nhận thao tác</h3>
+          <p id="confirm-modal-subtitle">Vui lòng kiểm tra kỹ thông tin trước khi tiếp tục</p>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-confirm-close" onclick="closeConfirmModal()" aria-label="Đóng hộp thoại">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body confirm-modal-body">
+        <div class="confirm-backup-info-card" id="confirm-backup-info-card">
+          <div class="confirm-bk-row">
+            <span class="confirm-bk-label"><i class="fa-solid fa-database"></i> Bản sao lưu:</span>
+            <strong class="confirm-bk-val" id="confirm-bk-name">Backup 1</strong>
+          </div>
+          <div class="confirm-bk-row">
+            <span class="confirm-bk-label"><i class="fa-regular fa-clock"></i> Thời gian tạo:</span>
+            <span class="confirm-bk-val font-mono" id="confirm-bk-time">14:30 — 15/10/2026</span>
+          </div>
+          <div class="confirm-bk-row">
+            <span class="confirm-bk-label"><i class="fa-solid fa-user-circle"></i> Hồ sơ:</span>
+            <span class="confirm-bk-val" id="confirm-bk-user">Nguyễn Văn A (@doc_id)</span>
+          </div>
+          <div class="confirm-bk-row" id="confirm-bk-details-row">
+            <span class="confirm-bk-label"><i class="fa-solid fa-circle-info"></i> Tóm tắt:</span>
+            <span class="confirm-bk-val" id="confirm-bk-summary">Năm 2026 • 2 mục tiêu tài chính</span>
+          </div>
+        </div>
+
+        <div class="confirm-warning-banner" id="confirm-warning-banner">
+          <div class="confirm-warning-icon-wrap">
+            <i class="fa-solid fa-triangle-exclamation" id="confirm-warning-icon"></i>
+          </div>
+          <div class="confirm-warning-content">
+            <strong id="confirm-warning-heading">Cảnh báo ghi đè dữ liệu</strong>
+            <p id="confirm-warning-text">
+              Thao tác này sẽ thay thế dữ liệu tài chính hiện tại trên màn hình bằng dữ liệu từ bản sao lưu được chọn. Một bản lưu an toàn cho phiên hiện tại sẽ được tự động tạo trước khi khôi phục.
+            </p>
+          </div>
+        </div>
+
+        <div id="confirm-status-alert" class="confirm-status-alert" style="display: none;">
+          <i class="fa-solid fa-spinner fa-spin" id="confirm-status-icon"></i>
+          <span id="confirm-status-msg">Đang kết nối Firebase và thực hiện thao tác...</span>
+        </div>
+      </div>
+
+      <div class="modal-footer confirm-modal-footer">
+        <button type="button" class="btn-modal-cancel" id="btn-confirm-cancel" onclick="closeConfirmModal()">
+          Hủy
+        </button>
+        <button type="button" class="btn-modal-submit" id="btn-confirm-action" onclick="executeConfirmedAction()">
+          <span id="confirm-action-btn-text">Xác nhận khôi phục</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="exit-save-modal-overlay" class="modal-overlay confirm-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="exit-save-modal-title" style="display: none;">
+    <div class="modal-card confirm-modal-card confirm-type-restore">
+      <div class="modal-header confirm-modal-header">
+        <div class="modal-icon-badge confirm-icon-badge">
+          <i class="fa-solid fa-floppy-disk"></i>
+        </div>
+        <div class="modal-title-group">
+          <h3 id="exit-save-modal-title">Lưu dữ liệu trước khi đóng trang?</h3>
+          <p id="exit-save-modal-subtitle">Bạn có dữ liệu chưa được lưu vào hồ sơ trên đám mây</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeExitSaveModal()" aria-label="Đóng hộp thoại">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body confirm-modal-body">
+        <div class="confirm-warning-banner">
+          <div class="confirm-warning-icon-wrap">
+            <i class="fa-solid fa-circle-question"></i>
+          </div>
+          <div class="confirm-warning-content">
+            <strong>Bạn có muốn lưu dữ liệu hiện tại không?</strong>
+            <p id="exit-save-warning-text">
+              Nếu bạn tắt trang web mà không lưu, những thông tin vừa nhập hoặc chỉnh sửa trong phiên làm việc này sẽ không được ghi nhận. Hãy nhấn <strong>"Lưu dữ liệu ngay"</strong> để bảo toàn dữ liệu trước khi thoát.
+            </p>
+          </div>
+        </div>
+
+        <div id="exit-save-status-alert" class="confirm-status-alert" style="display: none;">
+          <i class="fa-solid fa-spinner fa-spin" id="exit-save-status-icon"></i>
+          <span id="exit-save-status-msg">Đang lưu dữ liệu lên Cloud Firestore...</span>
+        </div>
+      </div>
+
+      <div class="modal-footer confirm-modal-footer">
+        <button type="button" class="btn-modal-cancel" id="btn-exit-stay" onclick="closeExitSaveModal()">
+          Ở lại trang
+        </button>
+        <button type="button" class="btn-danger-outline" id="btn-exit-discard" onclick="confirmExitWithoutSaving()">
+          <i class="fa-solid fa-trash-can"></i> Không lưu
+        </button>
+        <button type="button" class="btn-modal-submit" id="btn-exit-save-now" onclick="confirmSaveBeforeExit()">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span id="btn-exit-save-text">Lưu dữ liệu ngay</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="data-io-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="data-io-modal-title" style="display: none;">
+    <div class="modal-card backup-modal-card data-io-modal-card" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-icon-badge"><i class="fa-solid fa-file-shield"></i></div>
+        <div class="modal-title-group">
+          <h3 id="data-io-modal-title">Quản lý Dữ liệu &amp; Bản sao lưu</h3>
+          <p>Nhập file JSON/CSV bằng kéo thả, tải file xuất hoặc khôi phục bản lưu đám mây</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeDataIoModal()" aria-label="Đóng hộp thoại"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body backup-modal-body">
+        <div class="io-tabs-bar" role="tablist">
+          <button type="button" class="io-tab-btn active" id="btn-io-tab-import" onclick="switchDataIoTab('import')">
+            <i class="fa-solid fa-file-arrow-up"></i> <span>Nhập dữ liệu (JSON / CSV)</span>
+          </button>
+          <button type="button" class="io-tab-btn" id="btn-io-tab-export-json" onclick="switchDataIoTab('export-json')">
+            <i class="fa-solid fa-download"></i> <span>Xuất JSON</span>
+          </button>
+          <button type="button" class="io-tab-btn" id="btn-io-tab-backups" onclick="switchDataIoTab('backups')">
+            <i class="fa-solid fa-cloud-arrow-down"></i> <span>Bản sao lưu Cloud</span>
+          </button>
+        </div>
+
+        <div id="io-panel-import" class="io-tab-panel active">
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+            <button type="button" class="btn-cloud-sync btn-sm" onclick="downloadCsvTemplate()">
+              <i class="fa-solid fa-table"></i> <span>Tải file CSV mẫu</span>
+            </button>
+          </div>
+
+          <!-- Lucian UX/UI Prompt #032 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#032 -->
+          <div class="ux u032" id="u032-upload-root">
+            <button class="u032-zone" type="button" id="u032-zone-btn" aria-label="Kéo thả file hoặc nhấn để chọn file">
+              <svg class="u032-dash" aria-hidden="true"><rect width="100%" height="100%" rx="25"/></svg>
+              <span class="u032-orb" aria-hidden="true">
+                <svg viewBox="0 0 28 28">
+                  <path d="M8.5 20.5H7a5 5 0 0 1-.6-10 7 7 0 0 1 13.4-1.6A5.5 5.5 0 0 1 21 20.5h-1.5M14 13v10M10.5 16.5L14 13l3.5 3.5"/>
+                </svg>
+              </span>
+              <b>Kéo thả file vào đây hoặc <em>chọn tệp</em></b>
+              <small>Hỗ trợ file JSON (.json) hoặc CSV (.csv) · Tối đa 50 MB</small>
+            </button>
+            <input class="u032-file" id="u032-file-input" type="file" accept=".json,.csv,application/json,text/csv" multiple tabindex="-1" aria-hidden="true">
+            <ul class="u032-list" id="u032-files-list" aria-live="polite"></ul>
+          </div>
+
+          <div id="json-import-options-box" style="display: none; margin-top: 14px;">
+            <div class="form-group">
+              <label>Chế độ xử lý dữ liệu trùng:</label>
+              <div class="io-radio-group">
+                <label class="io-radio-item">
+                  <input type="radio" name="json-import-mode" value="add" onchange="updateJsonImportPreview()">
+                  <div>
+                    <strong>Thêm dữ liệu (Add)</strong>
+                    <span>Chỉ thêm các bản ghi mới, giữ nguyên toàn bộ bản ghi đang có</span>
+                  </div>
+                </label>
+                <label class="io-radio-item">
+                  <input type="radio" name="json-import-mode" value="update" checked onchange="updateJsonImportPreview()">
+                  <div>
+                    <strong>Cập nhật dữ liệu trùng khóa (Update)</strong>
+                    <span>Cập nhật bản ghi trùng ID/tên và bổ sung bản ghi mới</span>
+                  </div>
+                </label>
+                <label class="io-radio-item">
+                  <input type="radio" name="json-import-mode" value="replace" onchange="updateJsonImportPreview()">
+                  <div>
+                    <strong>Thay thế dữ liệu hiện có (Replace)</strong>
+                    <span>Thay thế dữ liệu hiện tại bằng dữ liệu từ file JSON (vẫn bảo vệ 2 mục tiêu cố định)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="io-checkbox-item">
+                <input type="checkbox" id="chk-json-allow-keywords" checked onchange="updateJsonImportPreview()">
+                <span>Đồng bộ thông số trong mục <strong>"Từ khóa"</strong> từ file JSON (Năm, tuổi, danh mục chi tiêu, thu nhập, đầu tư, học tập)</span>
+              </label>
+            </div>
+
+            <div id="json-import-error-box" class="input-error-msg" style="display: none;"></div>
+
+            <div id="json-import-preview-box" class="backup-preview-card" style="display: none;">
+              <div class="backup-preview-head">
+                <div class="backup-preview-title">
+                  <i class="fa-solid fa-clipboard-check text-success"></i>
+                  <strong id="json-preview-title">Xem trước dữ liệu JSON hợp lệ</strong>
+                </div>
+                <span class="backup-preview-time" id="json-preview-version">Schema v2.2</span>
+              </div>
+              <div id="json-preview-summary-list" class="io-preview-summary"></div>
+              <div class="backup-preview-actions">
+                <button type="button" class="btn-modal-submit btn-sm" id="btn-confirm-json-import" onclick="confirmJsonImport()">
+                  <i class="fa-solid fa-check-double"></i> <span>Xác nhận nhập JSON</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="csv-import-options-box" style="display: none; margin-top: 14px;">
+            <div class="io-row-2col">
+              <div class="form-group">
+                <label for="select-csv-target-table">1. Bảng dữ liệu đích:</label>
+                <select id="select-csv-target-table" class="io-select" onchange="onCsvTargetTableChange()">
+                  <optgroup label="Từ khóa thiết lập">
+                    <option value="keywords_expense">Từ khóa: Danh mục chi phí</option>
+                    <option value="keywords_income">Từ khóa: Danh mục nguồn thu nhập</option>
+                    <option value="keywords_learning">Từ khóa: Kế hoạch phát triển chuyên môn</option>
+                    <option value="keywords_invest">Từ khóa: Danh mục sản phẩm đầu tư</option>
+                  </optgroup>
+                  <optgroup label="Kế hoạch &amp; Lộ trình">
+                    <option value="plan_income">Dự kiến thu hàng tháng (Kế hoạch năm)</option>
+                    <option value="plan_expense">Dự kiến chi hàng tháng (Kế hoạch năm)</option>
+                    <option value="tc_goals">Mục tiêu tài chính (Khoản nợ &amp; Đầu tư)</option>
+                    <option value="career_route">Cân đối lộ trình nghề nghiệp</option>
+                  </optgroup>
+                  <optgroup label="Nhật ký 12 tháng">
+                    <option value="month_income">Thực thu theo tháng (Nhật ký thu)</option>
+                    <option value="month_expense">Thực chi theo tháng (Nhật ký chi)</option>
+                    <option value="month_learning">Chi phí học tập theo tháng</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="form-group" id="csv-month-select-group">
+                <label for="select-csv-target-month">Tháng áp dụng:</label>
+                <select id="select-csv-target-month" class="io-select" onchange="revalidateCsvPreview()">
+                  <option value="1">Tháng 01</option>
+                  <option value="2">Tháng 02</option>
+                  <option value="3">Tháng 03</option>
+                  <option value="4">Tháng 04</option>
+                  <option value="5">Tháng 05</option>
+                  <option value="6">Tháng 06</option>
+                  <option value="7">Tháng 07</option>
+                  <option value="8">Tháng 08</option>
+                  <option value="9">Tháng 09</option>
+                  <option value="10">Tháng 10</option>
+                  <option value="11">Tháng 11</option>
+                  <option value="12">Tháng 12</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="io-row-2col">
+              <div class="form-group">
+                <label for="select-csv-import-mode">2. Chế độ nhập CSV:</label>
+                <select id="select-csv-import-mode" class="io-select" onchange="revalidateCsvPreview()">
+                  <option value="add">Thêm dữ liệu mới (Add)</option>
+                  <option value="update">Cập nhật dòng trùng khóa (Update)</option>
+                  <option value="replace">Thay thế bảng đích (Replace)</option>
+                </select>
+              </div>
+              <div class="form-group" style="display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;">
+                <button type="button" class="btn-cloud-sync" onclick="downloadCsvTemplate()">
+                  <i class="fa-solid fa-table"></i> <span>Tải file CSV mẫu</span>
+                </button>
+                <button type="button" class="btn-cloud-sync" onclick="exportCurrentTableToCsv()">
+                  <i class="fa-solid fa-file-arrow-down"></i> <span>Xuất bảng này ra CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="csv-import-error-box" class="input-error-msg" style="display: none;"></div>
+
+            <div id="csv-column-mapping-box" class="io-mapping-box" style="display: none;">
+              <div class="io-mapping-title"><i class="fa-solid fa-arrows-left-right"></i> Ánh xạ cột CSV vào trường dữ liệu hệ thống:</div>
+              <div id="csv-mapping-fields" class="io-mapping-grid"></div>
+            </div>
+
+            <div id="csv-import-preview-box" class="backup-preview-card" style="display: none;">
+              <div class="backup-preview-head">
+                <div class="backup-preview-title">
+                  <i class="fa-solid fa-table-list text-primary"></i>
+                  <strong id="csv-preview-stats-title">Kết quả kiểm tra dữ liệu CSV</strong>
+                </div>
+                <span class="backup-preview-time" id="csv-preview-counts-badge">0 hợp lệ / 0 lỗi</span>
+              </div>
+              <div id="csv-preview-table-wrap" class="io-csv-preview-scroll"></div>
+              <div class="backup-preview-actions">
+                <button type="button" class="btn-modal-submit btn-sm" id="btn-confirm-csv-import" onclick="confirmCsvImport()">
+                  <i class="fa-solid fa-file-import"></i> <span>Xác nhận nhập các dòng hợp lệ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="io-panel-export-json" class="io-tab-panel" style="display: none;">
+          <div class="io-summary-box">
+            <div class="io-summary-head">
+              <i class="fa-solid fa-user-check text-primary"></i>
+              <span>Dữ liệu thuộc tài khoản hiện tại: <strong id="io-export-user-label">Chưa xác nhận</strong></span>
+            </div>
+            <div class="backup-preview-grid" id="io-export-stats-grid">
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Năm &amp; Tuổi:</span>
+                <strong class="bk-meta-val" id="io-export-year-age">2026 / 21T</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Từ khóa thiết lập:</span>
+                <strong class="bk-meta-val" id="io-export-keywords-count">0 mục</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Mục tiêu tài chính:</span>
+                <strong class="bk-meta-val" id="io-export-goals-count">2 mục tiêu</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Kế hoạch thu/chi:</span>
+                <strong class="bk-meta-val" id="io-export-plan-count">0 dòng</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Giao dịch 12 tháng:</span>
+                <strong class="bk-meta-val" id="io-export-tx-count">0 bản ghi</strong>
+              </div>
+            </div>
+            <p class="io-hint-text">
+              File JSON xuất ra chứa đầy đủ cấu trúc dữ liệu và phiên bản định dạng của tài khoản đang đăng nhập (không chứa mật khẩu hoặc token xác thực).
+            </p>
+            <div class="io-actions-row">
+              <button type="button" class="btn-modal-submit" id="btn-trigger-export-json" onclick="exportAppStateToJson()">
+                <i class="fa-solid fa-file-arrow-down"></i> <span>Tải xuống file JSON (.json)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="io-panel-backups" class="io-tab-panel" style="display: none;">
+          <div class="backup-toolbar">
+            <div class="backup-search-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="backup-search-input" placeholder="Tìm bản sao lưu theo tên hoặc ngày..." oninput="filterAndSortBackups()">
+            </div>
+            <div class="backup-sort-wrap">
+              <label for="backup-sort-select"><i class="fa-solid fa-arrow-down-short-wide"></i></label>
+              <select id="backup-sort-select" onchange="filterAndSortBackups()">
+                <option value="newest">Mới nhất</option>
+                <option value="oldest">Cũ nhất</option>
+                <option value="name">Tên A-Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="backup-loading-state" class="backup-state-box" style="display: none;">
+            <i class="fa-solid fa-spinner fa-spin backup-spin-icon"></i>
+            <span>Đang tải danh sách bản sao lưu từ hệ thống...</span>
+          </div>
+
+          <div id="backup-empty-state" class="backup-state-box" style="display: none;">
+            <i class="fa-solid fa-folder-open backup-empty-icon"></i>
+            <strong>Chưa có bản sao lưu nào</strong>
+            <p>Hồ sơ này chưa lưu bản sao lưu nào. Hãy bấm "Lưu dữ liệu" để tạo bản sao lưu đầu tiên!</p>
+            <button type="button" class="btn-modal-submit btn-sm" onclick="saveAppStateToCloud()">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Lưu bản hiện tại ngay
+            </button>
+          </div>
+
+          <div id="backup-error-state" class="backup-state-box backup-error-box" style="display: none;">
+            <i class="fa-solid fa-circle-exclamation text-danger"></i>
+            <span id="backup-error-msg">Không thể tải danh sách sao lưu. Vui lòng kiểm tra kết nối mạng.</span>
+            <button type="button" class="btn-cloud-sync btn-sm" onclick="openBackupManagerModal()">
+              <i class="fa-solid fa-rotate-right"></i> Thử lại
+            </button>
+          </div>
+
+          <div class="backup-list-container" id="backup-items-list" role="list"></div>
+
+          <div id="backup-preview-card" class="backup-preview-card" style="display: none;">
+            <div class="backup-preview-head">
+              <div class="backup-preview-title">
+                <i class="fa-solid fa-file-invoice-dollar text-primary"></i>
+                <strong id="preview-bk-name">Bản sao lưu #1</strong>
+              </div>
+              <span class="backup-preview-time" id="preview-bk-time">14:30 — 15/10/2026</span>
+            </div>
+            <div class="backup-preview-grid">
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Năm kế hoạch:</span>
+                <strong class="bk-meta-val" id="preview-bk-year">2026</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Tuổi hiện tại:</span>
+                <strong class="bk-meta-val" id="preview-bk-age">25</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Mục tiêu tài chính:</span>
+                <strong class="bk-meta-val" id="preview-bk-goals">0 mục tiêu</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Tổng thu dự kiến:</span>
+                <strong class="bk-meta-val text-success" id="preview-bk-income">0 / tháng</strong>
+              </div>
+            </div>
+
+            <div class="backup-preview-actions" id="backup-preview-actions">
+              <button type="button" class="btn-modal-submit btn-sm" onclick="openRestoreConfirmModal(selectedBackupId)">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Khôi phục bản này
+              </button>
+              <button type="button" class="btn-danger-outline btn-sm" onclick="openDeleteConfirmModal(selectedBackupId)">
+                <i class="fa-solid fa-trash-can"></i> Xóa bản này
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer backup-modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeDataIoModal()">
+          Đóng
+        </button>
+        <button type="button" class="btn-cloud-sync" onclick="switchDataIoTab('export-json')">
+          <i class="fa-solid fa-download"></i> <span>Xuất JSON</span>
+        </button>
+        <button type="button" class="btn-cloud-sync" onclick="switchDataIoTab('backups')">
+          <i class="fa-solid fa-clock-rotate-left"></i> <span>Sao lưu Cloud</span>
+        </button>
+        <button type="button" class="btn-modal-submit" onclick="saveAppStateToCloud();">
+          <i class="fa-solid fa-plus"></i> <span>Tạo bản lưu mới</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="user-modal-overlay" class="modal-overlay">
+    <div class="modal-card auth-modal-card">
+      <div class="modal-header">
+        <div class="modal-icon-badge"><i class="fa-solid fa-user-shield"></i></div>
+        <div class="modal-title-group">
+          <h3 id="auth-modal-heading">Quản lý Tài khoản</h3>
+          <p id="auth-modal-subheading">Kiểm tra thông tin định danh tài khoản, Email khôi phục hoặc đổi mật khẩu</p>
+        </div>
+        <button type="button" class="btn-modal-close" id="btn-auth-close-x" onclick="closeUserModal()" style="display: none;" aria-label="Đóng hộp thoại">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="auth-tabs-nav" id="auth-tabs-nav" role="tablist">
+          <button type="button" class="auth-tab-btn active" id="btn-auth-tab-account" onclick="switchAuthModalTab('account')">
+            <i class="fa-solid fa-id-card"></i> <span>Thông tin tài khoản</span>
+          </button>
+          <button type="button" class="auth-tab-btn" id="btn-auth-tab-change-password" onclick="switchAuthModalTab('change-password')">
+            <i class="fa-solid fa-lock"></i> <span>Đổi mật khẩu</span>
+          </button>
+        </div>
+
+        <div id="auth-panel-account" class="auth-tab-panel">
+          <div class="io-summary-box">
+            <div class="backup-preview-grid">
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Username hiển thị:</span>
+                <strong class="bk-meta-val" id="auth-acc-display-username">Chưa đăng nhập</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Username chuẩn hóa:</span>
+                <strong class="bk-meta-val" id="auth-acc-norm-username">@guest</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Email khôi phục:</span>
+                <strong class="bk-meta-val" id="auth-acc-masked-email">Chưa liên kết</strong>
+              </div>
+              <div class="bk-meta-item">
+                <span class="bk-meta-lbl">Định danh UID:</span>
+                <strong class="bk-meta-val" id="auth-acc-uid">---</strong>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-auth-acc-email">Cập nhật / Liên kết Email khôi phục mới:</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="input-auth-acc-email" placeholder="Nhập email khôi phục mới (ten@domain.com)..." autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-auth-acc-password">Xác nhận mật khẩu hiện tại:</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-key"></i>
+              <input type="password" id="input-auth-acc-password" placeholder="Nhập mật khẩu hiện tại để lưu thay đổi..." autocomplete="current-password">
+            </div>
+          </div>
+        </div>
+
+        <div id="auth-panel-change-password" class="auth-tab-panel" style="display: none;">
+          <div class="form-group">
+            <label for="input-auth-change-curpass">Mật khẩu hiện tại:</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-unlock-keyhole"></i>
+              <input type="password" id="input-auth-change-curpass" placeholder="Nhập mật khẩu hiện tại..." autocomplete="current-password">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-auth-change-newpass">Mật khẩu mới (tối thiểu 6 ký tự):</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="input-auth-change-newpass" placeholder="Nhập mật khẩu mới..." autocomplete="new-password">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-auth-change-confirm">Xác nhận mật khẩu mới:</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+              <input type="password" id="input-auth-change-confirm" placeholder="Nhập lại mật khẩu mới..." autocomplete="new-password">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-error-msg" id="user-input-error" style="display: none;"></div>
+        <div class="auth-success-msg" id="user-auth-success" style="display: none;"></div>
+      </div>
+
+      <div class="modal-footer">
+        <a href="./auth/index.html" class="btn-modal-cancel" id="link-modal-go-auth" onclick="goToAuthPage('login', '', true); return false;" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-right-to-bracket"></i> <span>Trang Đăng nhập / Đăng ký</span>
+        </a>
+        <button type="button" class="btn-modal-cancel" id="btn-modal-cancel" onclick="closeUserModal()" style="display: none;">
+          Đóng
+        </button>
+        <button type="button" class="btn-modal-submit" id="btn-modal-submit" onclick="submitUserProfile()">
+          <span id="btn-modal-submit-label">Lưu Email khôi phục</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="class-manager-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="class-manager-modal-title" style="display: none;">
+    <div class="modal-card class-manager-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="class-manager-modal-title"><i class="fa-solid fa-chalkboard-user text-primary"></i> Quản lý Lớp học &amp; Giảng viên</h3>
+          <p id="class-manager-modal-subtitle">Theo dõi tiến độ, duyệt thành viên, xem bài chỉ đọc và phân tích tài chính tổng hợp</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeClassManagerModal()" aria-label="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="class-manager-tabs-nav" role="tablist">
+        <button type="button" class="class-tab-btn active" id="btn-class-tab-classes" onclick="switchClassTab('classes')">
+          <i class="fa-solid fa-users"></i> <span>Lớp học &amp; Duyệt học viên</span>
+        </button>
+        <button type="button" class="class-tab-btn" id="btn-class-tab-matrix" onclick="switchClassTab('matrix')">
+          <i class="fa-solid fa-table-cells"></i> <span>Ma trận Tiến độ Học tập</span>
+        </button>
+        <button type="button" class="class-tab-btn" id="btn-class-tab-analytics" onclick="switchClassTab('analytics')">
+          <i class="fa-solid fa-chart-pie"></i> <span>Dashboard Phân tích Lớp</span>
+        </button>
+        <button type="button" class="class-tab-btn" id="btn-class-tab-codes" onclick="switchClassTab('codes')" style="display: none;">
+          <i class="fa-solid fa-key"></i> <span>Mã Quản trị</span>
+        </button>
+      </div>
+
+      <div class="modal-body class-manager-modal-body">
+        <div id="class-panel-classes" class="class-tab-panel active">
+          <div class="class-toolbar-row">
+            <div class="class-select-group">
+              <label for="class-select-dropdown">Chọn lớp học:</label>
+              <select id="class-select-dropdown" class="class-select" onchange="onClassSelected(this.value)"></select>
+            </div>
+            <div class="class-actions-group">
+              <button type="button" class="btn-sub-action" onclick="toggleCreateClassForm(true)">
+                <i class="fa-solid fa-plus"></i> <span>Tạo lớp mới</span>
+              </button>
+              <button type="button" class="btn-sub-action" onclick="exportCurrentClassBackup()">
+                <i class="fa-solid fa-file-export"></i> <span>Sao lưu lớp</span>
+              </button>
+              <button type="button" class="btn-sub-action btn-danger-soft" onclick="archiveCurrentClass()">
+                <i class="fa-solid fa-box-archive"></i> <span>Đóng / Lưu trữ học kỳ</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="create-class-form-card" class="create-class-card" style="display: none;">
+            <h4><i class="fa-solid fa-circle-plus text-primary"></i> Tạo Nhóm / Lớp học mới</h4>
+            <div class="form-row-grid">
+              <div class="form-group">
+                <label for="input-new-class-name">Tên lớp học:</label>
+                <input type="text" id="input-new-class-name" placeholder="Ví dụ: Lớp Hoạch định K49..." class="auth-input">
+              </div>
+              <div class="form-group">
+                <label for="input-new-class-code">Mã lớp (duy nhất):</label>
+                <input type="text" id="input-new-class-code" placeholder="Ví dụ: TC-K49" class="auth-input" style="text-transform: uppercase;">
+              </div>
+              <div class="form-group">
+                <label for="input-new-class-limit">Sĩ số tối đa:</label>
+                <input type="number" id="input-new-class-limit" value="50" min="5" max="200" class="auth-input">
+              </div>
+            </div>
+            <div class="form-actions-inline">
+              <button type="button" class="btn-sub-action" onclick="toggleCreateClassForm(false)">Hủy</button>
+              <button type="button" class="btn-sub-action btn-primary-solid" onclick="submitCreateNewClass()">Tạo lớp</button>
+            </div>
+          </div>
+
+          <div class="class-info-card" id="current-class-info-card">
+            <div class="class-info-stat">
+              <span class="stat-lbl">Mã tham gia lớp</span>
+              <strong class="stat-val text-primary" id="card-class-code">---</strong>
+            </div>
+            <div class="class-info-stat">
+              <span class="stat-lbl">Giảng viên phụ trách</span>
+              <strong class="stat-val" id="card-class-instructor">---</strong>
+            </div>
+            <div class="class-info-stat">
+              <span class="stat-lbl">Sĩ số hiện tại</span>
+              <strong class="stat-val" id="card-class-count">0 / 50</strong>
+            </div>
+            <div class="class-info-stat">
+              <span class="stat-lbl">Trạng thái</span>
+              <span class="badge-status-active" id="card-class-status">Đang hoạt động</span>
+            </div>
+          </div>
+
+          <div class="class-section-title">
+            <i class="fa-solid fa-user-clock text-warning"></i>
+            <span>Yêu cầu tham gia lớp chờ duyệt (<span id="pending-members-count">0</span>)</span>
+          </div>
+          <div class="class-table-wrap">
+            <table class="class-data-table">
+              <thead>
+                <tr>
+                  <th>Học viên</th>
+                  <th>Username</th>
+                  <th>Ngày gửi</th>
+                  <th style="text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="class-pending-members-tbody">
+                <tr><td colspan="4" class="empty-cell">Không có yêu cầu nào đang chờ duyệt</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="class-section-title" style="margin-top: 20px;">
+            <i class="fa-solid fa-user-check text-success"></i>
+            <span>Danh sách thành viên chính thức (<span id="approved-members-count">0</span>)</span>
+          </div>
+          <div class="class-table-wrap">
+            <table class="class-data-table">
+              <thead>
+                <tr>
+                  <th>Học viên</th>
+                  <th>Username</th>
+                  <th>Ngày tham gia</th>
+                  <th style="text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="class-approved-members-tbody">
+                <tr><td colspan="4" class="empty-cell">Chưa có học viên nào</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="class-panel-matrix" class="class-tab-panel" style="display: none;">
+          <div class="matrix-legend-row">
+            <span class="matrix-legend-item"><span class="badge-prog badge-prog-done"><i class="fa-solid fa-check"></i> Hoàn thành</span></span>
+            <span class="matrix-legend-item"><span class="badge-prog badge-prog-doing"><i class="fa-solid fa-spinner"></i> Đang làm</span></span>
+            <span class="matrix-legend-item"><span class="badge-prog badge-prog-none"><i class="fa-solid fa-minus"></i> Chưa bắt đầu</span></span>
+          </div>
+          <div class="class-table-wrap">
+            <table class="class-data-table matrix-table">
+              <thead>
+                <tr>
+                  <th>Học viên</th>
+                  <th style="text-align: center;">Từ khóa</th>
+                  <th style="text-align: center;">Kế hoạch</th>
+                  <th style="text-align: center;">Mục tiêu</th>
+                  <th style="text-align: center;">Lộ trình</th>
+                  <th style="text-align: center;">Tiến độ</th>
+                  <th style="text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="class-matrix-tbody">
+                <tr><td colspan="7" class="empty-cell">Đang tải ma trận tiến độ...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="class-panel-analytics" class="class-tab-panel" style="display: none;">
+          <div class="analytics-metrics-grid">
+            <div class="analytics-card">
+              <div class="analytics-card-lbl">Sĩ số &amp; Tỷ lệ hoàn thành</div>
+              <div class="analytics-card-val" id="ana-completion-rate">0%</div>
+              <small class="analytics-card-hint" id="ana-completion-hint">Dựa trên ma trận 4 phân hệ</small>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-card-lbl">Tỷ lệ tiết kiệm bình quân</div>
+              <div class="analytics-card-val text-success" id="ana-savings-rate">0%</div>
+              <small class="analytics-card-hint">Tỷ lệ tiết kiệm trên thu nhập</small>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-card-lbl">Dòng tiền ròng TB/tháng</div>
+              <div class="analytics-card-val text-primary" id="ana-net-cashflow">0 tr</div>
+              <small class="analytics-card-hint">Chênh lệch thu - chi thực tế</small>
+            </div>
+            <div class="analytics-card">
+              <div class="analytics-card-lbl">Tỷ lệ trả nợ TB (DSR)</div>
+              <div class="analytics-card-val text-warning" id="ana-dsr-ratio">0%</div>
+              <small class="analytics-card-hint">Khuyến nghị an toàn &lt; 35%</small>
+            </div>
+          </div>
+
+          <div class="class-section-title" style="margin-top: 24px;">
+            <i class="fa-solid fa-chart-pie text-primary"></i>
+            <span>Phân bổ danh mục đầu tư bình quân toàn lớp</span>
+          </div>
+          <div class="portfolio-breakdown-bar-wrap">
+            <div class="breakdown-bar">
+              <div class="bar-seg seg-stocks" id="seg-ana-stocks" style="width: 25%;" title="Cổ phiếu"></div>
+              <div class="bar-seg seg-bonds" id="seg-ana-bonds" style="width: 25%;" title="Trái phiếu"></div>
+              <div class="bar-seg seg-insurance" id="seg-ana-insurance" style="width: 25%;" title="Bảo hiểm"></div>
+              <div class="bar-seg seg-cash" id="seg-ana-cash" style="width: 25%;" title="Tiền gửi"></div>
+            </div>
+            <div class="breakdown-legend">
+              <span class="breakdown-item"><span class="dot-seg seg-stocks"></span> Cổ phiếu: <strong id="lbl-ana-stocks">25%</strong></span>
+              <span class="breakdown-item"><span class="dot-seg seg-bonds"></span> Trái phiếu: <strong id="lbl-ana-bonds">25%</strong></span>
+              <span class="breakdown-item"><span class="dot-seg seg-insurance"></span> Bảo hiểm: <strong id="lbl-ana-insurance">25%</strong></span>
+              <span class="breakdown-item"><span class="dot-seg seg-cash"></span> Tiền gửi: <strong id="lbl-ana-cash">25%</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="class-panel-codes" class="class-tab-panel" style="display: none;">
+          <div class="admin-codes-creator-row">
+            <div class="form-group">
+              <label for="select-new-code-role">Vai trò cấp:</label>
+              <select id="select-new-code-role" class="class-select">
+                <option value="instructor">Giảng viên / Quản lý lớp (Instructor)</option>
+                <option value="admin">Quản trị viên hệ thống (Admin)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-new-code-uses">Số lượt dùng:</label>
+              <select id="select-new-code-uses" class="class-select">
+                <option value="1">1 lượt (Dùng 1 lần)</option>
+                <option value="5">5 lượt</option>
+                <option value="20">20 lượt</option>
+                <option value="100">100 lượt</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="select-new-code-days">Thời hạn:</label>
+              <select id="select-new-code-days" class="class-select">
+                <option value="30">30 ngày</option>
+                <option value="90">90 ngày</option>
+                <option value="365">1 năm</option>
+              </select>
+            </div>
+            <button type="button" class="btn-sub-action btn-primary-solid" style="align-self: flex-end;" onclick="submitGenerateAdminCode()">
+              <i class="fa-solid fa-key"></i> <span>Sinh Mã Quản trị mới</span>
+            </button>
+          </div>
+
+          <div class="class-table-wrap" style="margin-top: 16px;">
+            <table class="class-data-table">
+              <thead>
+                <tr>
+                  <th>Mã Quản trị (XXXX-XXXX-XXXX)</th>
+                  <th>Vai trò</th>
+                  <th>Lượt dùng</th>
+                  <th>Hạn sử dụng</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="admin-codes-tbody">
+                <tr><td colspan="5" class="empty-cell">Đang tải danh sách mã quản trị...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeClassManagerModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="student-join-class-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="student-join-class-modal-title" style="display: none;">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="student-join-class-modal-title"><i class="fa-solid fa-users text-primary"></i> Tham gia Nhóm</h3>
+          <p>Nhập mã nhóm do người quản lý hoặc giảng viên cung cấp để tham gia</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeStudentJoinClassModal()" aria-label="Đóng">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="input-student-class-code">Mã nhóm (Mã tham gia):</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-hashtag input-icon-left"></i>
+            <input type="text" id="input-student-class-code" class="auth-input" placeholder="Ví dụ: TC-K48..." maxlength="16" style="text-transform: uppercase;">
+          </div>
+        </div>
+
+        <div id="student-join-feedback" style="display: none; margin-top: 10px; font-size: 13px;"></div>
+
+        <div class="class-section-title" style="margin-top: 20px;">
+          <i class="fa-solid fa-bookmark text-primary"></i>
+          <span>Nhóm của bạn</span>
+        </div>
+        <div class="class-table-wrap">
+          <table class="class-data-table">
+            <thead>
+              <tr>
+                <th>Nhóm</th>
+                <th>Mã nhóm</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="student-enrolled-classes-tbody">
+              <tr><td colspan="3" class="empty-cell">Bạn chưa tham gia nhóm nào</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeStudentJoinClassModal()">Đóng</button>
+        <button type="button" class="btn-modal-submit" onclick="submitStudentJoinClass()">
+          <span>Gửi yêu cầu tham gia</span> <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="custom-group-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="custom-group-title" style="display: none;">
+    <div class="modal-card custom-group-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="custom-group-title"><i class="fa-solid fa-sliders text-primary"></i> Tùy chỉnh nhóm đào tạo</h3>
+          <p>Điều chỉnh quy mô, đổi tên, thay đổi trạng thái Kín/Mở và cập nhật nội quy</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeCustomGroupModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="custom-group-id">
+        <div class="form-field-group">
+          <label for="custom-group-name">Tên nhóm / Lớp học</label>
+          <input type="text" id="custom-group-name" class="admin-input-styled" maxlength="64">
+        </div>
+
+        <div class="form-field-group">
+          <label for="custom-group-code">Mã tham gia nhóm</label>
+          <input type="text" id="custom-group-code" class="admin-input-styled uppercase-input" maxlength="32">
+        </div>
+
+        <div class="form-field-group">
+          <label>Số lượng thành viên tối đa</label>
+          <div class="limit-selector-group">
+            <label class="limit-radio-label">
+              <input type="radio" name="custom-group-limit" value="40">
+              <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>40</strong></span>
+            </label>
+            <label class="limit-radio-label">
+              <input type="radio" name="custom-group-limit" value="60">
+              <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>60</strong></span>
+            </label>
+            <label class="limit-radio-label">
+              <input type="radio" name="custom-group-limit" value="100">
+              <span class="limit-radio-card"><i class="fa-solid fa-users"></i> <strong>100</strong></span>
+            </label>
+            <label class="limit-radio-label">
+              <input type="radio" name="custom-group-limit" value="0">
+              <span class="limit-radio-card"><i class="fa-solid fa-infinity"></i> <strong>No limit</strong></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-field-group">
+          <label>Chế độ nhóm</label>
+          <div class="privacy-selector-group">
+            <label class="privacy-radio-label">
+              <input type="radio" name="custom-group-privacy" value="private">
+              <span class="privacy-radio-card straight-line-radio">
+                <i class="fa-solid fa-lock"></i> <strong>Nhóm Riêng tư - phê duyệt</strong>
+              </span>
+            </label>
+            <label class="privacy-radio-label">
+              <input type="radio" name="custom-group-privacy" value="global">
+              <span class="privacy-radio-card straight-line-radio">
+                <i class="fa-solid fa-globe"></i> <strong>Nhóm Mở (Global) — Vào tự do</strong>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-field-group">
+          <label for="custom-group-desc">Quy định &amp; Ghi chú nhóm</label>
+          <textarea id="custom-group-desc" class="admin-textarea-styled" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: space-between;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn-archive-group-danger" onclick="archiveCurrentCustomGroup()">
+            <i class="fa-solid fa-box-archive"></i> <span>Lưu trữ</span>
+          </button>
+          <button type="button" class="btn-delete-group-danger" onclick="deleteCurrentCustomGroup()">
+            <i class="fa-solid fa-trash-can"></i> <span>Xóa nhóm</span>
+          </button>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-modal-cancel" onclick="closeCustomGroupModal()">Hủy</button>
+          <button type="button" class="btn-modal-submit" onclick="saveCustomGroupSettings()">
+            <i class="fa-solid fa-floppy-disk"></i> <span>Lưu thay đổi</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-personal-settings-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="admin-settings-title" style="display: none;">
+    <div class="modal-card admin-settings-modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3 id="admin-settings-title"><i class="fa-solid fa-gear text-primary"></i> Cài đặt cá nhân Quản trị viên</h3>
+          <p>Thiết lập hồ sơ admin thuần, cấp phát mã phân quyền, bảo mật và cấu hình hệ thống</p>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeAdminPersonalSettingsModal()" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="admin-settings-tabs-bar">
+        <button type="button" class="settings-tab-btn active" id="btn-sett-profile" onclick="switchAdminSettingsTab('profile')">
+          <i class="fa-solid fa-id-card"></i> <span>Hồ sơ Admin</span>
+        </button>
+        <button type="button" class="settings-tab-btn" id="btn-sett-codes" onclick="switchAdminSettingsTab('codes')">
+          <i class="fa-solid fa-key"></i> <span>Cung cấp &amp; Quản lý Mã</span>
+        </button>
+        <button type="button" class="settings-tab-btn" id="btn-sett-security" onclick="switchAdminSettingsTab('security')">
+          <i class="fa-solid fa-shield-halved"></i> <span>Bảo mật</span>
+        </button>
+        <button type="button" class="settings-tab-btn" id="btn-sett-system" onclick="switchAdminSettingsTab('system')">
+          <i class="fa-solid fa-sliders"></i> <span>Hệ thống</span>
+        </button>
+      </div>
+
+      <div class="modal-body admin-settings-modal-body">
+        <div id="sett-pane-profile" class="sett-pane active">
+          <div class="admin-profile-hero">
+            <div class="admin-avatar-big" id="sett-avatar-preview">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div class="admin-profile-meta">
+              <h3 id="sett-display-title">Quản trị viên</h3>
+              <div class="admin-role-badge-master">
+                <i class="fa-solid fa-certificate"></i> <span>Master Admin (Quản trị viên Tối cao)</span>
+              </div>
+              <p class="admin-profile-sub">Tài khoản này có toàn quyền tạo nhóm, duyệt thành viên và cung cấp mã quản trị cho người khác.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2cols" style="margin-top: 18px;">
+            <div class="form-field-group">
+              <label for="inp-sett-display-name">Tên hiển thị</label>
+              <input type="text" id="inp-sett-display-name" class="admin-input-styled" value="Quản trị viên (Admin)">
+            </div>
+            <div class="form-field-group">
+              <label for="inp-sett-username">Tên đăng nhập (Username)</label>
+              <input type="text" id="inp-sett-username" class="admin-input-styled readonly-input" value="admin" readonly>
+            </div>
+          </div>
+
+          <div class="form-grid-2cols">
+            <div class="form-field-group">
+              <label for="inp-sett-email">Email khôi phục &amp; liên hệ</label>
+              <input type="email" id="inp-sett-email" class="admin-input-styled" value="admin@financials-plan.io">
+            </div>
+            <div class="form-field-group">
+              <label for="inp-sett-phone">Số điện thoại liên hệ</label>
+              <input type="tel" id="inp-sett-phone" class="admin-input-styled" placeholder="09xx xxx xxx">
+            </div>
+          </div>
+
+          <div style="margin-top: 16px; text-align: right;">
+            <button type="button" class="btn-submit-group" onclick="saveAdminProfileSettings()">
+              <i class="fa-solid fa-floppy-disk"></i> <span>Lưu cập nhật hồ sơ</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="sett-pane-codes" class="sett-pane" style="display: none;">
+          <div class="codes-distributor-notice">
+            <i class="fa-solid fa-info-circle text-primary"></i>
+            <span>Bạn là Quản trị viên đầu tiên. Hãy tạo mã cấp quyền dưới đây và gửi mã cho các Giảng viên hoặc Quản trị viên phụ để họ đăng ký tài khoản.</span>
+          </div>
+
+          <div class="codes-generator-card">
+            <h4><i class="fa-solid fa-plus-circle text-primary"></i> Tạo mã cấp quyền mới</h4>
+            <div class="codes-generator-row">
+              <div class="form-field-group">
+                <label>Vai trò cấp</label>
+                <select id="inp-gen-role" class="admin-select-styled">
+                  <option value="instructor">Giảng viên / Quản lý nhóm (INST)</option>
+                  <option value="admin">Quản trị viên phụ (ADMN)</option>
+                </select>
+              </div>
+              <div class="form-field-group">
+                <label>Lượt dùng tối đa</label>
+                <select id="inp-gen-uses" class="admin-select-styled">
+                  <option value="1">1 lượt (Dùng 1 lần)</option>
+                  <option value="5">5 lượt</option>
+                  <option value="20" selected>20 lượt</option>
+                  <option value="100">100 lượt</option>
+                </select>
+              </div>
+              <div class="form-field-group">
+                <label>Thời hạn hiệu lực</label>
+                <select id="inp-gen-days" class="admin-select-styled">
+                  <option value="7">7 ngày</option>
+                  <option value="30">30 ngày</option>
+                  <option value="90" selected>90 ngày</option>
+                  <option value="365">1 năm</option>
+                </select>
+              </div>
+              <div class="form-field-group" style="align-self: flex-end;">
+                <button type="button" class="btn-submit-group" onclick="submitGenerateAdminCode()">
+                  <i class="fa-solid fa-bolt"></i> <span>Tạo mã ngay</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="codes-list-section" style="margin-top: 18px;">
+            <h4><i class="fa-solid fa-list-check text-primary"></i> Danh sách mã đã cấp phát</h4>
+            <div class="table-responsive">
+              <table class="admin-custom-table" id="table-sett-codes">
+                <thead>
+                  <tr>
+                    <th>Mã số</th>
+                    <th>Vai trò</th>
+                    <th>Lượt dùng</th>
+                    <th>Hạn dùng</th>
+                    <th>Trạng thái</th>
+                    <th style="text-align: right;">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-sett-codes"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="sett-pane-security" class="sett-pane" style="display: none;">
+          <div class="security-card-box">
+            <h4><i class="fa-solid fa-key text-primary"></i> Đổi mật khẩu đăng nhập</h4>
+            <div class="form-field-group">
+              <label for="inp-pass-old">Mật khẩu hiện tại</label>
+              <input type="password" id="inp-pass-old" class="admin-input-styled" placeholder="Nhập mật khẩu đang dùng...">
+            </div>
+            <div class="form-grid-2cols">
+              <div class="form-field-group">
+                <label for="inp-pass-new">Mật khẩu mới</label>
+                <input type="password" id="inp-pass-new" class="admin-input-styled" placeholder="Tối thiểu 6 ký tự...">
+              </div>
+              <div class="form-field-group">
+                <label for="inp-pass-confirm">Xác nhận mật khẩu mới</label>
+                <input type="password" id="inp-pass-confirm" class="admin-input-styled" placeholder="Nhập lại mật khẩu mới...">
+              </div>
+            </div>
+            <div style="margin-top: 12px; text-align: right;">
+              <button type="button" class="btn-submit-group" onclick="submitChangeAdminPassword()">
+                <i class="fa-solid fa-lock"></i> <span>Cập nhật mật khẩu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sett-pane-system" class="sett-pane" style="display: none;">
+          <div class="system-pref-card">
+            <h4><i class="fa-solid fa-bell text-primary"></i> Tùy chọn thông báo</h4>
+            <div class="pref-toggle-row">
+              <div>
+                <strong>Thông báo khi có yêu cầu vào nhóm mới</strong>
+                <p>Hiển thị chuông và badge báo khi học viên gửi yêu cầu xin vào nhóm Kín</p>
+              </div>
+              <input type="checkbox" id="chk-notify-requests" checked style="width: 20px; height: 20px;">
+            </div>
+          </div>
+
+          <div class="system-pref-card" style="margin-top: 16px;">
+            <h4><i class="fa-solid fa-database text-primary"></i> Sao lưu &amp; Khôi phục toàn bộ hệ thống</h4>
+            <p>Tải về tệp sao lưu dữ liệu toàn bộ nhóm, danh sách học viên và mã quản trị để lưu trữ an toàn.</p>
+            <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+              <button type="button" class="btn-admin-action-primary" onclick="exportAdminComprehensiveCsv()">
+                <i class="fa-solid fa-file-csv"></i> <span>Xuất báo cáo toàn diện (CSV)</span>
+              </button>
+              <button type="button" class="btn-admin-action-outline" onclick="exportAdminSystemBackup()">
+                <i class="fa-solid fa-download"></i> <span>Tải bản sao lưu (JSON)</span>
+              </button>
+              <button type="button" class="btn-admin-action-outline" onclick="triggerAdminSystemRestore()">
+                <i class="fa-solid fa-upload"></i> <span>Khôi phục từ tệp (JSON)</span>
+              </button>
+              <input type="file" id="file-admin-system-restore" accept=".json" style="display: none;" onchange="handleAdminSystemRestoreFile(this)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="closeAdminPersonalSettingsModal()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn-primary btn-floating-class-action" id="btn-floating-switch-class" onclick="openStudentJoinClassModal()" title="Cài đặt lớp học" aria-label="Cài đặt lớp học">
+    <i class="fa-solid fa-graduation-cap"></i>
+    <span>Cài đặt lớp học</span>
+  </button>
+
+  <script type="module" src="./backend/firestore-service.js"></script>
+  <script src="./js/script.js?v=3.3.0"></script>
+
 </body>
 </html>
